@@ -46,9 +46,13 @@ import {
   type ExportKind,
 } from './settings-model';
 
-// Compile-time app version injected by the bundler; falls back in raw dev runs.
+// Compile-time app version + build id injected by the bundler; falls back in raw
+// dev runs. The build id carries a per-build suffix on staging/dev, so the footer
+// visibly changes on every deploy — a quick "am I on the new build?" check.
 declare const __APP_VERSION__: string;
+declare const __BUILD_ID__: string;
 function appVersion(): string {
+  if (typeof __BUILD_ID__ !== 'undefined' && __BUILD_ID__) return __BUILD_ID__;
   return typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0-dev';
 }
 

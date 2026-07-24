@@ -22,7 +22,11 @@ interface PdfTextItem {
 
 /** Reconstruct text lines from a PDF, ordering by vertical then horizontal position. */
 async function extractLines(file: File, password?: string): Promise<string[]> {
-  const pdfjs = await import('pdfjs-dist/build/pdf.mjs');
+  // The LEGACY build ships polyfills (Promise.withResolvers, structuredClone, …)
+  // and older syntax, so pdf.js runs on Safari/iOS versions the modern build
+  // crashes on ("TypeError: undefined is not a function"). Paired with the legacy
+  // worker built in scripts/bundle.js.
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   // Classic worker served from the app root; avoids bundling pdf.js into core.
   pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdf.worker.js', document.baseURI).href;
 

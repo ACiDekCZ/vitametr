@@ -13,6 +13,10 @@ import { execSync } from 'child_process';
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 
 const dev = process.argv.includes('--dev');
+// Staging: a production build (minified, real SW) but network-first and with a
+// per-build cache id, so every deploy is picked up on the next open — no stale
+// shell hiding a fix under test.
+const staging = process.argv.includes('--staging');
 
 const pkgVersion = JSON.parse(readFileSync('package.json', 'utf-8')).version;
 
@@ -26,11 +30,18 @@ const versionDefine = `--define:__APP_VERSION__='${JSON.stringify(pkgVersion)}'`
 // per-build id (this is a build script, not app code, so Date.now() is fine) is
 // used — otherwise the cache-first SW would serve a stale main.js forever after
 // the first load, hiding every rebuild.
-const buildId = dev ? `${pkgVersion}-dev-${Date.now()}` : pkgVersion;
+const buildId = dev
+  ? `${pkgVersion}-dev-${Date.now()}`
+  : staging
+    ? `${pkgVersion}-staging-${Date.now()}`
+    : pkgVersion;
 const buildIdDefine = `--define:__BUILD_ID__='${JSON.stringify(buildId)}'`;
 // Lets the app skip (and tear down) the service worker in development, where a
 // cached shell only shadows freshly rebuilt assets.
 const devDefine = `--define:__DEV__=${dev ? 'true' : 'false'}`;
+// Network-first SW fetch strategy (dev + staging): always fetch fresh assets so
+// a redeploy is visible on the next open; production stays cache-first (offline).
+const swNetworkFirstDefine = `--define:__SW_NETWORK_FIRST__=${dev || staging ? 'true' : 'false'}`;
 const optimize = dev ? '--sourcemap' : '--minify';
 
 console.log(`Building bundle (${dev ? 'development' : 'production'})...`);
@@ -38,7 +49,7 @@ console.log(`Building bundle (${dev ? 'development' : 'production'})...`);
 // pdf.js dependency) out of the core bundle: a dynamic import() becomes a
 // separate chunk fetched only when that feature is first used.
 execSync(
-    `npx esbuild src/main.ts --bundle --splitting --format=esm --target=es2022 ${optimize} ${versionDefine} ${devDefine} --external:*.woff2 --outdir=dist --entry-names=main --chunk-names=chunks/[name]-[hash]`,
+    `npx esbuild src/main.ts --bundle --splitting --format=esm --target=es2022 ${optimize} ${versionDefine} ${buildIdDefine} ${devDefine} --external:*.woff2 --outdir=dist --entry-names=main --chunk-names=chunks/[name]-[hash]`,
     { stdio: 'inherit' },
 );
 
@@ -46,13 +57,13 @@ execSync(
 // app) emitted at the app root so its scope covers everything. Built as a
 // classic (IIFE) worker so registration needs no module-worker support.
 execSync(
-    `npx esbuild src/sw.ts --bundle --format=iife --target=es2022 ${optimize} ${versionDefine} ${buildIdDefine} --outfile=dist/sw.js`,
+    `npx esbuild src/sw.ts --bundle --format=iife --target=es2022 ${optimize} ${versionDefine} ${buildIdDefine} ${swNetworkFirstDefine} --outfile=dist/sw.js`,
     { stdio: 'inherit' },
 );
 
 // pdf.js worker, bundled as a classic worker for the (lazy) PDF import plugin.
 execSync(
-    `npx esbuild node_modules/pdfjs-dist/build/pdf.worker.mjs --bundle --format=iife --target=es2022 ${optimize} --outfile=dist/pdf.worker.js`,
+    `npx esbuild node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs --bundle --format=iife --target=es2022 ${optimize} --outfile=dist/pdf.worker.js`,
     { stdio: 'inherit' },
 );
 

@@ -11,6 +11,7 @@
 
 declare const self: ServiceWorkerGlobalScope;
 declare const __BUILD_ID__: string;
+declare const __SW_NETWORK_FIRST__: boolean;
 
 // Per-build in development, the package version in production (see bundle.js).
 // A changing id makes a rebuild produce a new sw.js and a new cache name, so the
@@ -21,6 +22,10 @@ const CACHE = `vitametr-shell-${BUILD_ID}`;
 // (esbuild --serve rebuilds main.js but not sw.js), so dev serves network-first
 // with a cache fallback; production stays cache-first for a true offline shell.
 const DEV = BUILD_ID.includes('-dev-');
+// Network-first fetch strategy (dev + staging): always try the network so a
+// redeploy is visible on the next open. Production stays cache-first (offline).
+const NETWORK_FIRST =
+  DEV || (typeof __SW_NETWORK_FIRST__ !== 'undefined' && __SW_NETWORK_FIRST__ === true);
 
 /** Everything needed to boot the app with no network. */
 const SHELL: readonly string[] = [
@@ -36,6 +41,10 @@ const SHELL: readonly string[] = [
 ];
 
 self.addEventListener('install', (event) => {
+  // On staging (network-first) take over immediately, so a redeploy is live on
+  // the next open without waiting for every tab to close. Production keeps the
+  // controlled update (the page posts SKIP_WAITING on user action).
+  if (NETWORK_FIRST) void self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE).then((cache) => cache.addAll(SHELL as string[])),
   );
@@ -73,16 +82,16 @@ self.addEventListener('fetch', (event) => {
   // network so a rebuilt shell is never shadowed by the cache.
   if (request.mode === 'navigate') {
     event.respondWith(
-      DEV
+      NETWORK_FIRST
         ? fetch(request).catch(() => caches.match('./index.html').then((c) => c ?? fetch(request)))
         : caches.match('./index.html').then((cached) => cached ?? fetch(request)),
     );
     return;
   }
 
-  // Dev: network-first (cache only as an offline fallback) so edits show up
-  // without a rebuild of sw.js.
-  if (DEV) {
+  // Network-first (cache only as an offline fallback) so a redeploy shows up
+  // without waiting for a new sw.js to take over.
+  if (NETWORK_FIRST) {
     event.respondWith(fetch(request).catch(() => caches.match(request).then((c) => c ?? Response.error())));
     return;
   }
