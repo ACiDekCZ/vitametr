@@ -1,6 +1,6 @@
 {
   "name": "vitametr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Offline-first PWA for tracking personal health measurements over time",
   "author": "Milan Víšek",
   "license": "MPL-2.0",
@@ -8,6 +8,7 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "node scripts/bundle.js",
+    "build:staging": "node scripts/bundle.js --staging",
     "build:dev": "node scripts/bundle.js --dev",
     "watch": "esbuild src/main.ts --bundle --sourcemap --format=esm --target=es2022 --external:*.woff2 --outfile=dist/main.js --watch",
     "dev": "node scripts/bundle.js --dev && esbuild src/main.ts --bundle --sourcemap --format=esm --target=es2022 --external:*.woff2 --outfile=dist/main.js --servedir=dist --serve=127.0.0.1:8080",

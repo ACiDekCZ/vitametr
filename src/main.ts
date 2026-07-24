@@ -6,6 +6,7 @@
 import './ui/styles.css';
 import { mountApp } from './ui/app';
 import { applyBootTheme } from './ui/theme';
+import { installBrowserCompat } from './ui/compat';
 import { registerServiceWorker } from './pwa';
 import { detectLocale, setLocale, t } from './i18n/index';
 
@@ -13,6 +14,9 @@ import { detectLocale, setLocale, t } from './i18n/index';
 declare const __DEV__: boolean;
 
 function main(): void {
+  // Runtime shims (e.g. ReadableStream async iteration on Safari/iOS) before
+  // anything — lazily-loaded features depend on them.
+  installBrowserCompat();
   const root = document.getElementById('app');
   if (!root) {
     throw new Error('Missing #app root element');
