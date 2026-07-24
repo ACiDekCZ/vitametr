@@ -1,0 +1,176 @@
+/*
+ * Timeline screen (K8f) — a vertical rail of dated events.
+ * Builds only on the shared tokens defined in styles.css.
+ */
+
+/* --- Filters: chip rows (with a <select> fallback for large axes) --------- */
+
+.timeline-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.timeline-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-chips .chip {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  min-height: 34px;
+  background: var(--surface);
+  color: var(--text-muted);
+  box-shadow: var(--pill-shadow);
+}
+.timeline-chips .chip:hover { background: var(--surface-2); }
+.timeline-chips .chip.is-active {
+  font-weight: 700;
+  background: var(--text);
+  color: var(--surface);
+  box-shadow: none;
+}
+.timeline-chips .chip.is-active:hover { background: var(--text); }
+
+/* Fallback <select> for an axis with more options than chips can carry. */
+.timeline-filter { display: flex; flex-direction: column; gap: 4px; }
+.timeline-filter label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* --- Empty state ----------------------------------------------------------- */
+
+.timeline-empty { text-align: center; }
+
+/* --- Rail + card list ------------------------------------------------------ */
+
+.timeline-list { display: flex; flex-direction: column; }
+
+.timeline-entry {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+}
+
+.timeline-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 6px;
+  background: var(--text-faint);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1.5px var(--text-faint);
+}
+.timeline-dot.is-lab {
+  background: var(--accent);
+  box-shadow: 0 0 0 1.5px var(--accent);
+}
+.timeline-line {
+  flex: 1;
+  width: 2px;
+  background: var(--border);
+}
+/* The last event needs no connector trailing off the bottom. */
+.timeline-entry:last-child .timeline-line { display: none; }
+
+.timeline-entry-body { padding-bottom: 18px; min-width: 0; }
+
+.timeline-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.timeline-date { font-weight: 700; }
+.timeline-source {
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ghost action to reassign the whole batch's source. Sits after the source
+   name; pushed to the row end so it reads as a secondary affordance. */
+.timeline-change-source {
+  margin-left: auto;
+  padding: 2px 8px;
+  border: none;
+  background: none;
+  color: var(--accent, var(--text-muted));
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.timeline-change-source:hover {
+  text-decoration: underline;
+  background: none;
+}
+
+/* Bulk-change dialog: count line under the picker. */
+.timeline-change-count {
+  margin: 10px 0 4px;
+  font-size: 0.85rem;
+}
+
+.timeline-values {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 0;
+  border-top: 1px solid var(--divider);
+  background: transparent;
+  color: inherit;
+  padding: 13px 16px;
+  min-height: 44px;
+}
+.timeline-value:first-child { border-top: none; }
+.timeline-value:hover { background: var(--bg); }
+
+.timeline-metric { flex: 1; min-width: 0; font-weight: 600; }
+.timeline-reading {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Compact range indicator — complements the value, never its only signal. */
+.timeline-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--text-faint);
+}
+.timeline-status.ok { background: var(--ok); }
+.timeline-status.above { background: var(--above); }
+.timeline-status.below { background: var(--below); }
+.timeline-status.faint { background: var(--text-faint); }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Vitametr">
+  <rect width="512" height="512" rx="96" fill="#2f6f7a"/>
+  <!-- A time-series pulse line: the core idea of the app. -->
+  <polyline points="72,300 168,300 208,180 264,360 312,256 360,256 440,256"
+            fill="none" stroke="#ffffff" stroke-width="26"
+            stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="312" cy="256" r="20" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,99 @@
+/*
+ * Compare over time (K8) — restrained clinical, mobile-first.
+ * Small multiples stack vertically so trends can be read down the column;
+ * reuses the shared .card / .seg / .chip tokens from styles.css / chart.css /
+ * timeline.css so the screen matches the rest of the app.
+ */
+
+.compare-section {
+  margin: 0 0 calc(var(--gap) * 1.25);
+}
+.compare-section h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.compare-hint {
+  margin-top: 0;
+}
+
+/* Metric multi-select: wrapping toggle chips (same style as timeline filters).
+   Active = dark pill; inactive = surface pill with the shared pill shadow. */
+.compare-metric-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.compare-metric-list .chip {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  min-height: 34px;
+  background: var(--surface);
+  color: var(--text-muted);
+  box-shadow: var(--pill-shadow);
+}
+.compare-metric-list .chip:hover {
+  background: var(--surface-2);
+}
+.compare-metric-list .chip.is-active {
+  font-weight: 700;
+  background: var(--text);
+  color: var(--surface);
+  box-shadow: none;
+}
+.compare-metric-list .chip.is-active:hover {
+  background: var(--text);
+}
+
+.compare-period-label {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--text-muted);
+}
+
+/* Small multiples: one chart card per selected metric, stacked. */
+.compare-charts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin: 0 0 calc(var(--gap) * 1.25);
+}
+.compare-chart-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.compare-chart-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.compare-chart-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.compare-chart-trend {
+  font-size: 0.8rem;
+}
+.compare-chart {
+  width: 100%;
+}
+
+.compare-corr-value {
+  font-weight: 600;
+}
+.compare-corr-hint {
+  font-size: 0.8rem;
+}
+
+.compare-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

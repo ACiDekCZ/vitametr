@@ -1,0 +1,21 @@
+Vitametr
+Copyright (c) 2026 Milan Víšek
+
+Licensed under the Mozilla Public License 2.0 (see LICENSE).
+
+Third-party components:
+- pdf.js (pdfjs-dist) — Apache License 2.0 — https://github.com/mozilla/pdf.js
+  Lazy-loaded, only for the optional lab-PDF import; runs on-device.
+- Hanken Grotesk — SIL Open Font License 1.1 — self-hosted, no CDN.
+- LOINC codes — copyright (c) Regenstrief Institute, Inc. and the LOINC
+  Committee, used under the LOINC license (http://loinc.org/license). Only a
+  subset of codes is embedded. LOINC(R) is a registered US trademark of
+  Regenstrief Institute, Inc.
+- UCUM (Unified Code for Units of Measure) unit codes — copyright (c)
+  1999-2025, Regenstrief Institute, Inc., used under the UCUM license
+  (https://ucum.org/license).
+
+Proprietary cloud and AI services operated by the project author (e.g. device
+sync, backup, sharing, AI interpretation) are NOT part of this open-source
+release and are not covered by this license. The application is fully
+functional offline without any such service.

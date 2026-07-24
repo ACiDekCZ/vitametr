@@ -1,0 +1,41 @@
+{
+  "format": "vitametr-pack",
+  "version": 1,
+  "id": "demo-all-types",
+  "name": "Demo: all value types",
+  "metrics": [
+    {
+      "key": "demo-glucose",
+      "name": "Demo glukóza",
+      "aliases": ["demo glc"],
+      "valueType": "number",
+      "unit": "mmol/L",
+      "typicalRange": { "low": 3, "high": 30 }
+    },
+    {
+      "key": "demo-note",
+      "name": "Demo poznámka",
+      "valueType": "text"
+    },
+    {
+      "key": "demo-urine-protein",
+      "name": "Demo bílkovina v moči",
+      "aliases": ["demo bílkovina"],
+      "valueType": "enum",
+      "enumValues": ["negativní", "stopově", "pozitivní"]
+    },
+    {
+      "key": "demo-symptoms",
+      "name": "Demo příznaky",
+      "valueType": "multi",
+      "enumValues": ["bolest hlavy", "únava", "nevolnost"]
+    }
+  ],
+  "measurements": [
+    { "metric": "demo-glucose", "value": 5.4, "unit": "mmol/L", "takenAt": "2026-07-01" },
+    { "metric": "demo-glucose", "value": 6.1, "unit": "mmol/L", "takenAt": "2026-07-15" },
+    { "metric": "demo-note", "textValue": "cítím se dobře", "takenAt": "2026-07-01" },
+    { "metric": "demo-urine-protein", "textValue": "negativní", "takenAt": "2026-07-01" },
+    { "metric": "demo-symptoms", "textValues": ["únava", "bolest hlavy"], "takenAt": "2026-07-01" }
+  ]
+}

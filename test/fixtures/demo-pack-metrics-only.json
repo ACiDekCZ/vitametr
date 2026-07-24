@@ -1,0 +1,16 @@
+{
+  "format": "vitametr-pack",
+  "version": 1,
+  "id": "demo-metrics-only",
+  "name": "Demo: metric definitions only",
+  "metrics": [
+    {
+      "key": "demo-ferritin",
+      "name": "Demo feritin",
+      "aliases": ["demo ferr"],
+      "valueType": "number",
+      "unit": "ug/L",
+      "typicalRange": { "low": 30, "high": 400 }
+    }
+  ]
+}

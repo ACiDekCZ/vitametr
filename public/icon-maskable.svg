@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Vitametr">
+  <!-- Full-bleed background for the maskable safe zone. -->
+  <rect width="512" height="512" fill="#2f6f7a"/>
+  <polyline points="112,296 184,296 216,208 260,344 300,264 340,264 400,264"
+            fill="none" stroke="#ffffff" stroke-width="24"
+            stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="264" r="18" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,12 @@
+PATIENT,DATE,CODE,DESCRIPTION,VALUE,UNITS,TYPE
+p1,2023-02-10T08:15:00Z,2339-0,Glucose [Mass/volume] in Blood,95,mg/dL,numeric
+p1,2023-02-10T08:15:00Z,2093-3,Cholesterol [Mass/volume] in Serum or Plasma,193,mg/dL,numeric
+p1,2023-02-10T08:15:00Z,13457-7,Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation,118,mg/dL,numeric
+p1,2023-08-14T09:00:00Z,2339-0,Glucose [Mass/volume] in Blood,101,mg/dL,numeric
+p1,2023-08-14T09:00:00Z,4548-4,Hemoglobin A1c/Hemoglobin.total in Blood,5.6,%,numeric
+p1,2024-03-02T07:45:00Z,2339-0,Glucose [Mass/volume] in Blood,110,mg/dL,numeric
+p1,2024-03-02T07:45:00Z,2093-3,Cholesterol [Mass/volume] in Serum or Plasma,205,mg/dL,numeric
+p1,2024-09-20T08:30:00Z,2339-0,Glucose [Mass/volume] in Blood,98,mg/dL,numeric
+p1,2025-04-11T08:05:00Z,2339-0,Glucose [Mass/volume] in Blood,104,mg/dL,numeric
+p1,2025-04-11T08:05:00Z,718-7,Hemoglobin [Mass/volume] in Blood,14.2,g/dL,numeric
+p1,2026-01-15T08:20:00Z,2339-0,Glucose [Mass/volume] in Blood,99,mg/dL,numeric

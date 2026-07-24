@@ -1,0 +1,79 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [
+            { "system": "http://loinc.org", "code": "2345-7", "display": "Glucose [Mass/volume] in Serum or Plasma" }
+          ],
+          "text": "Glucose"
+        },
+        "effectiveDateTime": "2023-02-10T08:15:00+01:00",
+        "valueQuantity": { "value": 5.4, "unit": "mmol/l", "system": "http://unitsofmeasure.org", "code": "mmol/L" },
+        "referenceRange": [ { "low": { "value": 3.9 }, "high": { "value": 5.6 } } ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [ { "system": "http://loinc.org", "code": "13457-7", "display": "LDL cholesterol" } ]
+        },
+        "effectiveDateTime": "2023-02-10",
+        "valueQuantity": { "value": 3.2, "unit": "mmol/l", "code": "mmol/L" },
+        "referenceRange": [ { "high": { "value": 3.0 } } ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [ { "system": "http://loinc.org", "code": "4548-4", "display": "HbA1c" } ]
+        },
+        "effectiveDateTime": "2023-08-14",
+        "valueQuantity": { "value": 42, "unit": "mmol/mol", "code": "mmol/mol" }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [ { "system": "http://loinc.org", "code": "2160-0", "display": "Creatinine" } ]
+        },
+        "effectiveDateTime": "2023-08-14",
+        "valueQuantity": { "value": 78, "unit": "umol/l", "code": "umol/L" },
+        "referenceRange": [ { "low": { "value": 64 }, "high": { "value": 104 } } ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [ { "system": "http://loinc.org", "code": "14933-6", "display": "Some unmapped analyte" } ],
+          "text": "Mystery analyte"
+        },
+        "effectiveDateTime": "2024-03-02",
+        "valueQuantity": { "value": 1.1, "unit": "mg/l", "code": "mg/L" }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [ { "system": "http://loinc.org", "code": "2345-7", "display": "Glucose" } ]
+        },
+        "effectiveDateTime": "2024-09-20T07:30:00Z",
+        "valueQuantity": { "value": 0.1, "comparator": "<", "unit": "mmol/l", "code": "mmol/L" }
+      }
+    }
+  ]
+}

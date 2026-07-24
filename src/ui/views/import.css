@@ -1,0 +1,276 @@
+/*
+ * Import page (redesign IA, screen 1). Theme-aware via the shared tokens in
+ * styles.css — the design's literal light values map onto the variables so the
+ * page also works in dark mode. Focus rings and paint-only hover transitions for
+ * buttons / .format-card come from styles.css.
+ */
+
+.import-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+/* The `hidden` attribute must win over the display rules below (mode toggle). */
+.import-dropzone[hidden],
+.import-format-grid[hidden] {
+  display: none;
+}
+.import-subtitle {
+  margin: -8px 0 0;
+  font-size: 0.95rem;
+}
+
+/* Segmented control: Automatic / Specific format. */
+.import-segment {
+  display: inline-flex;
+  align-self: flex-start;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+}
+.import-segment-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 8px 18px;
+  min-height: 40px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.import-segment-btn:hover {
+  background: transparent;
+  color: var(--text);
+}
+.import-segment-btn.is-active,
+.import-segment-btn.is-active:hover {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+
+/* Dropzone: large dashed card; click or drop runs auto-detection. */
+.import-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 40px 24px;
+  border: 2px dashed var(--switch-off);
+  border-radius: 20px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.import-dropzone:hover,
+.import-dropzone.is-dragover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.import-dropzone-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: var(--accent-soft);
+  transition: transform 0.15s ease;
+}
+.import-dropzone.is-dragover .import-dropzone-tile {
+  transform: scale(1.08);
+}
+.import-dropzone-icon {
+  width: 30px;
+  height: 30px;
+  color: var(--accent);
+}
+.import-dropzone-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.import-dropzone-hint {
+  margin: 0;
+  font-size: 0.85rem;
+}
+/* A visual pill (rendered as a <span>, not a button — the whole dropzone is the
+   control). Mirrors the accent "primary" look without being focusable. */
+.import-pick-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  border-radius: 999px;
+  padding: 0.6em 1.4em;
+  font-weight: 700;
+  min-height: 44px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* Format grid: a card per format under "Specific format". */
+.import-format-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 500px) {
+  .import-format-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 900px) {
+  .import-format-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.format-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.format-card:hover {
+  background: var(--surface);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent);
+}
+.format-card-tile {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+}
+.format-card-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+.format-card-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+.format-card-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.format-card-desc {
+  font-size: 0.8rem;
+}
+
+/* "Known metrics only" / "Offer hidden metrics" switch rows. */
+.import-known-row,
+.import-offer-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.import-known-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.import-known-label {
+  font-weight: 600;
+}
+.import-known-hint {
+  font-size: 0.82rem;
+}
+
+.import-footer {
+  margin: 0;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+/* Recent imports history (minimal — visual polish comes later). */
+.import-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.import-history-title {
+  margin: 0;
+  font-size: 1rem;
+}
+.import-history-empty {
+  margin: 0;
+  font-size: 0.9rem;
+}
+.import-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.import-history-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.import-history-row.is-confirming {
+  flex-direction: column;
+  align-items: stretch;
+}
+.import-history-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.import-history-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.import-history-meta {
+  font-size: 0.82rem;
+}
+.import-history-undo {
+  flex: 0 0 auto;
+}
+/* "Also remove created metrics" opt-in inside the undo confirm. */
+.import-history-also-metrics {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Prominent entry point back to a batch still waiting for review. */
+.import-pending-banner {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 16px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-weight: 700;
+  padding: 14px 18px;
+  margin: 4px 0 12px;
+}
+.import-pending-banner:hover { background: var(--accent-soft); box-shadow: var(--shadow-hover); }

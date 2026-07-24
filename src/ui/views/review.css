@@ -1,0 +1,488 @@
+/*
+ * Import review screen (K8g) — restrained, clinical, mobile-first.
+ * Builds only on the shared tokens defined in styles.css.
+ */
+
+.review-subtitle { margin-top: 0; }
+
+.review-list {
+  list-style: none;
+  margin: 0 0 var(--gap);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.review-item { padding: var(--gap); }
+.review-item--unresolved { border-color: var(--warn); }
+
+.review-item-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-metric { font-weight: 600; flex: 1; min-width: 0; }
+
+.review-reading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.review-value { font-variant-numeric: tabular-nums; }
+.review-date { font-size: 0.9rem; }
+
+.review-confidence {
+  flex: 0 0 auto;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.review-confidence--high { color: var(--ok); }
+.review-confidence--medium { color: var(--warn); }
+.review-confidence--low { color: var(--danger); }
+
+/* ---- Accept / reject toggle ---- */
+
+.review-decision {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.review-toggle {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0.5em 0.9em;
+}
+.review-toggle[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+
+/* ---- Unresolved resolver ---- */
+
+.review-resolver {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.review-resolver--rejected { opacity: 0.6; }
+
+.review-unresolved { color: var(--warn); align-self: flex-start; }
+
+.review-field-label { font-size: 0.85rem; font-weight: 600; }
+
+/* Direct "create this metric" action — skip the combobox when you know it's new. */
+.review-create-direct {
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 700;
+  padding: 6px 2px;
+}
+.review-create-direct:hover { text-decoration: underline; }
+
+/* Suggestion chips (name + unit). */
+.review-suggested { display: flex; flex-direction: column; gap: 6px; }
+.review-suggest-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.review-suggest-chip { cursor: pointer; }
+
+/* Inline "create from raw name" quick-form (revealed from the combobox). */
+.review-create-host:empty { display: none; }
+.review-create { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.review-create-name,
+.review-create-unit {
+  padding: 0.55em 0.7em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.review-create-name { flex: 1 1 60%; min-width: 0; }
+.review-create-unit { flex: 1 1 6em; min-width: 0; }
+.review-create-btn {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0.55em 1em;
+}
+
+/* Single ghost secondary action, right-aligned. */
+.review-resolver-footer { display: flex; justify-content: flex-end; }
+.review-reject-item {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.4em 0.6em;
+}
+.review-reject-item:hover { color: var(--danger); }
+.review-reject-item[aria-pressed="true"] { color: var(--danger); font-weight: 600; }
+
+.review-assigned-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+.review-alias-hint { margin: 8px 0 0; font-size: 0.85rem; }
+.review-assigned-foot .review-alias-hint { margin: 0; }
+.review-change-metric {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  padding: 4px 6px;
+  flex: none;
+}
+.review-change-metric:hover { text-decoration: underline; }
+
+/* ---- Belongs to a disabled pack (a third row state: recognized but hidden) --- */
+
+/* Calm accent left-border marks the state apart from resolved / unresolved rows
+ * (which uses --warn) without an alarming colour. */
+.review-item--hidden-pack { border-left: 3px solid var(--accent); }
+
+.review-hidden-pack {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.review-hidden-pack-lead { margin: 0; font-size: 0.9rem; }
+
+/* Actions stack: full-width primary, then a quieter wrapping secondary cluster —
+ * mobile-safe (nothing scrolls sideways, buttons wrap). */
+.review-hidden-pack-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.review-hidden-activate {
+  width: 100%;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+  padding: 0.55em 0.9em;
+}
+.review-hidden-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+}
+.review-hidden-show,
+.review-hidden-create,
+.review-hidden-skip {
+  border: none;
+  background: transparent;
+  padding: 0.35em 0;
+}
+/* Secondary — a clear text action. */
+.review-hidden-show { color: var(--accent); font-weight: 600; }
+.review-hidden-show:hover { text-decoration: underline; }
+/* Escape hatch — de-emphasized. */
+.review-hidden-create { color: var(--text-muted); }
+.review-hidden-create:hover { color: var(--text); text-decoration: underline; }
+/* Skip — ghost, pushed to the trailing edge. */
+.review-hidden-skip { color: var(--text-muted); margin-left: auto; }
+.review-hidden-skip:hover { color: var(--danger); }
+.review-hidden-skip[aria-pressed="true"] { color: var(--danger); font-weight: 600; }
+
+/* Guarded create confirm (two-step). */
+.review-hidden-guard-q { margin: 0; font-size: 0.9rem; }
+.review-hidden-guard-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.review-hidden-guard-yes {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+  padding: 0.5em 0.9em;
+}
+.review-hidden-guard-no {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0.5em 0.9em;
+}
+
+/* ---- Bulk "activate the pack for all N" banners ---- */
+
+.review-hidden-banners:empty { display: none; }
+.review-hidden-banners {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: var(--gap);
+}
+.review-hidden-banner {
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  padding: 10px;
+}
+.review-hidden-banner-btn {
+  width: 100%;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+  padding: 0.55em 0.9em;
+}
+
+/* ---- Source attribution ---- */
+
+.review-source {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: var(--gap);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  margin-bottom: var(--gap);
+}
+.review-source-select,
+.review-source-name,
+.review-source-kind {
+  width: 100%;
+  padding: 0.55em 0.7em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.review-source-new {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-source-new .review-source-name { flex: 1 1 60%; }
+.review-source-new .review-source-kind { flex: 1 1 30%; }
+.review-source-new[hidden] { display: none; }
+
+/* ---- Footer ---- */
+
+.review-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+  padding: var(--gap) 0;
+  background: var(--bg);
+}
+.review-commit {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.review-count {
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-2);
+}
+.review-commit button {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: 1px solid var(--accent);
+  padding: 0.6em 1.2em;
+  font-weight: 600;
+}
+.review-commit button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.review-empty { text-align: center; }
+
+/* ---- Conflicts (same metric + time, different value) ---- */
+
+.review-conflicts[hidden] { display: none; }
+.review-conflicts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+}
+.review-conflicts-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-conflicts-title { margin: 0; }
+.review-conflicts-progress {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+}
+.review-conflicts-hint { margin: 0; font-size: 0.9rem; }
+
+.review-conflict {
+  padding: var(--gap);
+  border-color: var(--warn);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.review-conflict-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-conflict-metric { font-weight: 600; }
+.review-conflict-when { font-size: 0.9rem; }
+
+/* The competing pair: side by side on wide screens, stacked on mobile. */
+.review-conflict-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 560px) {
+  .review-conflict-pair { grid-template-columns: 1fr; }
+}
+.review-conflict-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+.review-conflict-badge {
+  font-size: 0.72rem;
+  background: var(--surface);
+}
+.review-conflict-block--new .review-conflict-badge,
+.review-conflict-block--first .review-conflict-badge {
+  color: var(--accent);
+}
+.review-conflict-reading { font-variant-numeric: tabular-nums; }
+.review-conflict-prov {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.78rem;
+  word-break: break-word;
+}
+
+.review-conflict-btn {
+  min-width: max-content;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.45em 0.9em;
+}
+.review-conflict-keep-this { align-self: stretch; margin-top: auto; }
+.review-conflict-keep-both {
+  width: 100%;
+  background: var(--surface-2);
+}
+.review-conflict-btn[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+
+/* Collapsed decision summary (§1c). */
+.review-conflict-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-conflict-decided-label { font-weight: 600; }
+.review-conflict-decided-values { font-variant-numeric: tabular-nums; }
+.review-conflict-change {
+  margin-left: auto;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0.35em 0.8em;
+}
+
+/* ---- N-way conflicts: vertical block list, collapse, shared actions ---- */
+
+/* Three or more competing values stack as a single vertical column. */
+.review-conflict-pair--stacked { grid-template-columns: 1fr; }
+.review-conflict-block[hidden] { display: none; }
+
+/* Subtle divider between the stored value(s) and the import occurrences. */
+.review-conflict-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 2px 0;
+}
+
+/* Shared actions row below the block list (keep all / keep latest). */
+.review-conflict-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.review-conflict-actions .review-conflict-btn { flex: 1 1 auto; }
+
+.review-conflict-show-more {
+  align-self: flex-start;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--accent);
+  padding: 0.4em 0.8em;
+  font-size: 0.85rem;
+}
+
+/* Per-metric conflict group header (§2): faint uppercase title + bulk actions. */
+.review-conflict-group {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.review-conflict-group-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.review-conflict-group-actions {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-bulk-btn {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  padding: 0.2em 0.4em;
+  font-size: 0.85rem;
+}
+.review-bulk-confirm-q { font-size: 0.85rem; }

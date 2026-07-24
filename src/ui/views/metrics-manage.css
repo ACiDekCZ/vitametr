@@ -1,0 +1,629 @@
+/*
+ * Metrics ("Veličiny") page (redesign IA, screen 2). Theme-aware via the shared
+ * tokens in styles.css; focus rings and paint-only hover transitions for buttons
+ * come from styles.css. Adds only what the header, search pill, segmented
+ * filter, metric rows, alias chips and pack tools need.
+ */
+
+.metrics-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--gap);
+}
+
+/* ---- Header: title + subtitle + round "+" -------------------------------- */
+
+.metrics-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.metrics-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.metrics-heading > h1 {
+  margin: 8px 0 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.metrics-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.metrics-add {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  font-weight: 400;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--fab-shadow);
+  margin-top: 6px;
+}
+.metrics-add:hover {
+  background: var(--accent);
+}
+
+/* ---- Search pill --------------------------------------------------------- */
+
+.metrics-search {
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  min-height: 46px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.metrics-search::placeholder {
+  color: var(--text-faint);
+}
+.metrics-search:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ---- Segmented filter (Used / All / Custom) ------------------------------ */
+
+.metrics-segment {
+  display: inline-flex;
+  align-self: flex-start;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+}
+.metrics-segment-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-height: 40px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.metrics-segment-btn:hover {
+  background: transparent;
+  color: var(--text);
+}
+.metrics-segment-btn.is-active,
+.metrics-segment-btn.is-active:hover {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+
+/* ---- Metrics list -------------------------------------------------------- */
+
+.metrics-list {
+  padding: 4px var(--gap);
+}
+.metrics-empty {
+  margin: 0;
+  padding: 16px 0;
+  text-align: center;
+}
+.metric-row-wrap + .metric-row-wrap {
+  border-top: 1px solid var(--divider);
+}
+.metric-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  border-radius: var(--radius-input);
+  transition: background 0.12s ease;
+}
+@media (hover: hover) {
+  .metric-row:hover {
+    background: var(--surface-2);
+  }
+}
+.metric-row-open {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 10px 0;
+  text-align: left;
+  border-radius: var(--radius-input);
+}
+.metric-row-open:hover {
+  background: transparent;
+}
+.metric-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.metric-row-name {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.metric-row-meta {
+  font-size: 0.82rem;
+}
+.metric-row-chevron {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 0;
+  transition: transform 0.15s ease, color 0.12s ease;
+}
+.metric-row-chevron[aria-expanded='true'] {
+  transform: rotate(90deg);
+}
+.metric-row-chevron:hover {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+/* ---- Metric detail (units, LOINC, alias chips) --------------------------- */
+
+.metric-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0 16px;
+}
+.metric-detail-line {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.metric-detail-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+.metric-detail-value {
+  color: var(--text);
+}
+.metric-detail-remove {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  align-items: flex-start;
+}
+.metric-remove:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.metric-remove-hint {
+  font-size: 0.8rem;
+  margin: 0;
+}
+.metric-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.metric-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 0.85rem;
+  border: none;
+}
+.metric-chip-remove {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.metric-chip-remove:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text);
+}
+.metric-chip-add {
+  cursor: pointer;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  border: 1.5px dashed var(--switch-off);
+}
+.metric-chip-add:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.metric-chip-editor {
+  padding: 2px 4px 2px 10px;
+}
+.metric-chip-input {
+  font: inherit;
+  font-size: 0.85rem;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  min-width: 8rem;
+  padding: 4px 0;
+}
+.metric-chip-input:focus {
+  outline: none;
+}
+
+/* ---- External codes (LOINC + generic pairs), advanced editable rows ------ */
+
+.metric-codes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.metric-code-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.metric-code-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  min-width: 3.2rem;
+}
+.metric-code-value {
+  color: var(--text);
+}
+.metric-code-value.is-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+.metric-code-system {
+  text-transform: none;
+  letter-spacing: 0;
+}
+.metric-code-system-input {
+  min-width: 6rem;
+}
+.metric-code-edit {
+  margin-left: auto;
+  cursor: pointer;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  padding: 2px 4px;
+}
+.metric-code-edit:hover {
+  text-decoration: underline;
+}
+.metric-code-input {
+  font: inherit;
+  font-size: 0.85rem;
+  border: 1px solid var(--switch-off);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 4px 8px;
+  min-width: 8rem;
+}
+.metric-code-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.metric-code-error {
+  flex-basis: 100%;
+  color: var(--danger, #c0392b);
+  font-size: 0.78rem;
+}
+
+/* ---- Add-metric dialog fields -------------------------------------------- */
+
+.modal-box .field {
+  margin-bottom: 0;
+}
+.modal-box .field[hidden] {
+  display: none;
+}
+.modal-box .modal-subhead {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.metric-chip-confirm {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0 2px;
+  width: 22px;
+  height: 22px;
+  min-height: 22px;
+  border-radius: 50%;
+}
+.metric-chip-confirm:hover {
+  background: var(--accent-soft);
+}
+
+/* ---- Pack tools ---------------------------------------------------------- */
+
+.metrics-pack-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.metrics-ghost {
+  flex: 1 1 auto;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 12px 18px;
+  min-height: 46px;
+  box-shadow: var(--pill-shadow);
+}
+.metrics-ghost:hover {
+  background: var(--surface);
+  color: var(--accent);
+}
+.metrics-tools:empty {
+  display: none;
+}
+
+/* ---- Installed packs (white group card matching the page) ---------------- */
+
+.metrics-packs-card {
+  padding: 4px var(--gap) var(--gap);
+}
+.metrics-packs-title {
+  margin: 14px 0 4px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+.metrics-packs-empty {
+  margin: 8px 0 4px;
+}
+.metrics-pack-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  min-height: 44px;
+}
+.metrics-pack-item + .metrics-pack-item {
+  border-top: 1px solid var(--divider);
+}
+.metrics-pack-item.is-confirming {
+  flex-direction: column;
+  align-items: stretch;
+}
+.metrics-pack-item.is-confirming > p {
+  margin: 0;
+}
+.metrics-pack-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.metrics-pack-name {
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.metrics-pack-count {
+  font-size: 0.82rem;
+}
+/* Compact ghost pill (secondary language) sitting on the white card. */
+.metrics-pack-remove {
+  flex: 0 0 auto;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 8px 14px;
+  min-height: 40px;
+}
+.metrics-pack-remove:hover {
+  background: var(--surface-2);
+  color: var(--danger);
+}
+
+/* ---- Bundled packs (toggle rows with expandable content preview) --------- */
+
+.metrics-bundled-item {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+}
+.metrics-bundled-item + .metrics-bundled-item {
+  border-top: 1px solid var(--divider);
+}
+.metrics-bundled-item.is-confirming {
+  gap: 8px;
+  padding: 12px 0;
+}
+.metrics-pack-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+}
+.metrics-pack-open {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  text-align: left;
+  border-radius: var(--radius-input);
+  cursor: pointer;
+}
+.metrics-pack-open:hover {
+  background: transparent;
+}
+.metrics-pack-open .metrics-pack-text {
+  flex: 1 1 auto;
+}
+.metrics-pack-chevron {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+.metrics-pack-open[aria-expanded='true'] .metrics-pack-chevron {
+  transform: rotate(90deg);
+}
+.metrics-pack-confirm-text {
+  margin: 0;
+}
+
+/* Content preview: the pack's metrics (name + unit, ✓ for ones already held). */
+.metrics-pack-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0 12px;
+}
+.metrics-pack-preview-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 0.9rem;
+}
+.metrics-pack-preview-name {
+  color: var(--text);
+}
+.metrics-pack-preview-unit {
+  font-size: 0.8rem;
+}
+.metrics-pack-preview-have {
+  margin-left: auto;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+/* Full-overlap "all already yours" chip: info, not correctness — accent-soft bg
+   (from .tag-chip--mini) with the deeper accent ink (#17545f light / theme-aware
+   in dark). Hugs its content in the column-flow meta. */
+.metrics-pack-fullhave.tag-chip--mini {
+  align-self: flex-start;
+  color: var(--accent-deep);
+}
+/* Muted lead-in shown atop a fully-overlapped pack's expanded preview. */
+.metrics-pack-fullhint {
+  margin: 0 0 4px;
+  font-size: 0.82rem;
+}
+
+/* The add-metric dialog reuses the shared input styling (settings mirrors it).
+   The pill-styled `.settings-inline-select` (sources dialog Type picker) owns its
+   own look, so it is excluded here — otherwise this higher-specificity rule would
+   override the pill fill/padding and collide with its custom chevron. */
+dialog.modal input[type='text'],
+dialog.modal select:not(.settings-inline-select) {
+  font: inherit;
+  width: 100%;
+  padding: 11px 12px;
+  min-height: 46px;
+  box-sizing: border-box;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-input);
+  background: var(--bg);
+  color: var(--text);
+}
+dialog.modal input[type='text']:focus,
+dialog.modal select:not(.settings-inline-select):focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  outline: none;
+}
+dialog.modal .field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+/* ---- Tag filter + tag chips (metric tags, phase 1) -----------------------
+   The chips are the shared `.tag-chip` / `.tag-chip--mini` (styles.css); only
+   the row layout lives here. */
+
+.metrics-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.metrics-tag-filter:empty {
+  display: none;
+}
+.metric-row-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}

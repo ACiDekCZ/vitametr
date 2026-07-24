@@ -1,0 +1,211 @@
+/*
+ * Pre-import filter ("What to import"). Same layout language as the review and
+ * export screens, built on the shared design tokens (styles.css): a segmented
+ * period control (mirroring `.export-segment`), a checklist reusing the shared
+ * `.check`, and a sticky-feeling footer. Theme-aware via the tokens.
+ */
+
+.import-filter-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+.import-filter-file {
+  margin: -8px 0 0;
+  font-size: 0.95rem;
+}
+.import-filter-empty {
+  margin: 0;
+}
+
+.import-filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.import-filter-section-title {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* Period segmented control (same look as the Export period segment). */
+.import-filter-segment {
+  display: inline-flex;
+  align-self: flex-start;
+  flex-wrap: wrap;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+}
+.import-filter-segment-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 8px 18px;
+  min-height: 40px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.import-filter-segment-btn:hover {
+  color: var(--text);
+}
+.import-filter-segment-btn.is-active,
+.import-filter-segment-btn.is-active:hover {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+
+/* Custom Od / Do date pair. */
+.import-filter-custom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.import-filter-custom[hidden] {
+  display: none;
+}
+.import-filter-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.import-filter-date-label {
+  font-size: 0.78rem;
+}
+.import-filter-date {
+  font: inherit;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-height: 40px;
+}
+
+.import-filter-summary {
+  margin: 0;
+  font-size: 0.88rem;
+}
+.import-filter-note {
+  margin: -4px 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Metric controls: search + All / None. */
+.import-filter-metric-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.import-filter-search {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.import-filter-ghost {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  min-height: 40px;
+}
+.import-filter-ghost:hover {
+  border-color: var(--accent);
+}
+
+/* Tag filter chips (shared `.tag-chip`); collapse when empty. */
+.import-filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.import-filter-tags:empty {
+  display: none;
+  margin: 0;
+}
+
+/* Metric checklist. */
+.import-filter-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.import-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  border-top: 1px solid var(--border);
+}
+.import-filter-row:first-child {
+  border-top: none;
+}
+.import-filter-row[hidden] {
+  display: none;
+}
+.import-filter-row--empty {
+  cursor: default;
+  opacity: 0.6;
+}
+.import-filter-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.import-filter-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.import-filter-name {
+  font-weight: 600;
+}
+.import-filter-unresolved {
+  font-size: 0.72rem;
+  background: var(--warn-soft, var(--surface-2));
+  color: var(--text-muted);
+}
+.import-filter-meta {
+  font-size: 0.8rem;
+}
+
+/* Footer: Cancel (ghost) + Continue (primary). */
+.import-filter-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.import-filter-continue:disabled {
+  background: var(--switch-off);
+  border-color: var(--switch-off);
+  color: var(--text-faint);
+  box-shadow: none;
+  opacity: 1;
+  cursor: default;
+}

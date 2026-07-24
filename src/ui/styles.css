@@ -1,0 +1,743 @@
+/*
+ * Vitametr — design tokens and app-shell layout.
+ * Theme-aware (light/dark via a data-theme attribute on <html>). Self-hosted font, no CDN
+ * or network at runtime (offline-first).
+ */
+
+/* Hanken Grotesk — self-hosted variable font (latin + latin-ext for Czech). */
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --font: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --bg: #f4f7f7;
+  --surface: #ffffff;
+  --surface-2: #e7ecee;
+  --border: #e7ecee;
+  --divider: #eef2f2;
+  --text: #16282c;
+  --text-muted: #5d7278;
+  --text-faint: #8fa1a7;
+  --accent: #1f6e7d;
+  --accent-soft: #e3eff1;
+  --accent-contrast: #ffffff;
+  --accent-deep: #17545f;
+  --focus-ring: rgba(31, 110, 125, 0.35);
+  --switch-off: #cdd9dc;
+
+  --ok: #1e6e4c;   --ok-soft: #e1f0e8;
+  --warn: #b7791f;
+  --danger: #a83c26;
+  --above: #a83c26; --above-soft: #f9e6e0;
+  --below: #3a6fb8; --below-soft: #e2ebf6;
+
+  --radius: 20px;
+  --radius-input: 12px;
+  --gap: 16px;
+  --shadow: 0 1px 3px rgba(22, 40, 44, 0.06);
+  --shadow-hover: 0 4px 14px rgba(22, 40, 44, 0.10);
+
+  --header-h: 56px;
+  --nav-h: 68px;
+  --content-max: 900px;
+  --nav-bg: rgba(255, 255, 255, 0.92);
+  --pill-shadow: 0 1px 2px rgba(22, 40, 44, 0.08);
+  --fab-shadow: 0 6px 16px rgba(31, 110, 125, 0.4);
+}
+
+:root[data-theme='dark'] {
+  --bg: #131b1d;
+  --surface: #1b2528;
+  --surface-2: #232f33;
+  --border: #232f33;
+  --divider: #232f33;
+  --text: #e6eeef;
+  --text-muted: #93a6ab;
+  --text-faint: #6c7f84;
+  --accent: #4bb3c4;
+  --accent-soft: #17343a;
+  --accent-contrast: #0d1114;
+  --accent-deep: #3a97a6;
+  --focus-ring: rgba(75, 179, 196, 0.4);
+  --switch-off: #3a4a4e;
+  --ok: #4caf6a;   --ok-soft: #163024;
+  --warn: #d6a038;
+  --danger: #e0765f;
+  --above: #e0765f; --above-soft: #3a231e;
+  --below: #6fa0dc; --below-soft: #1c2a3a;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --nav-bg: rgba(27, 37, 40, 0.9);
+  --pill-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --fab-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+/*
+ * The theme is driven by an explicit data-theme attribute set on <html> by
+ * src/ui/theme.ts (which resolves the 'auto' preference via matchMedia). No
+ * prefers-color-scheme media query lives in the CSS: forcing light/dark is a
+ * simple attribute swap that also reaches every view-specific rule below.
+ */
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+}
+
+body { font-size: 16px; line-height: 1.45; }
+
+/*
+ * Eased colour swap for a user-initiated appearance change only. theme.ts adds
+ * `theme-anim` on <html> for ~200ms around the toggle; boot never sets it, so
+ * the first paint is instant with no cross-fade.
+ */
+.theme-anim body { transition: background-color 0.15s ease, color 0.15s ease; }
+
+.tnum { font-variant-numeric: tabular-nums; }
+
+h1, h2, h3 { line-height: 1.2; margin: 0 0 0.5em; }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.2rem; }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 0.55em 1em;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+button:hover { background: var(--surface-2); }
+button.primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+button.danger { color: var(--danger); border-color: var(--danger); }
+
+input, select {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5em 0.65em;
+  width: 100%;
+}
+
+label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3em; }
+
+a { color: var(--accent); }
+
+/* ---- Shell layout ---- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--gap);
+  background: var(--bg);
+  border-bottom: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.app-header .brand-wrap { display: flex; align-items: center; gap: 10px; }
+.app-header .brand-icon { width: 30px; height: 30px; border-radius: 9px; display: block; }
+.app-header .brand { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; }
+
+.app-content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--gap);
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + var(--gap));
+}
+
+/* Mobile bottom nav: 5-slot grid with a raised center FAB (2 labels, FAB, 2
+   labels). The center column is fixed-width for the FAB; the label columns
+   share the rest equally. */
+.app-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding: 0 4px env(safe-area-inset-bottom);
+  display: grid;
+  grid-template-columns: 1fr 1fr 64px 1fr 1fr;
+  align-items: center;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  z-index: 10;
+}
+.app-nav .nav-item {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 0.68rem;
+  font-weight: 700;
+  height: 100%;
+  min-height: 44px;
+  min-width: 0; /* let a 1fr column shrink below its label so it wraps, not overflows */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.app-nav .nav-item .nav-label {
+  max-width: 100%;
+  line-height: 1.1;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.app-nav .nav-item[aria-current="page"] { color: var(--text); }
+.app-nav .nav-indicator {
+  width: 22px;
+  height: 4px;
+  border-radius: 999px;
+  background: transparent;
+  display: block;
+}
+.app-nav .nav-item[aria-current="page"] .nav-indicator { background: var(--accent); }
+
+/* Center FAB — raised accent circle that opens the add-data action menu. */
+.app-nav .nav-fab {
+  width: 54px;
+  height: 54px;
+  min-height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1;
+  padding: 0;
+  justify-self: center;
+  align-self: center;
+  margin-top: -22px;
+  box-shadow: var(--fab-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app-nav .nav-fab .nav-label { display: none; }
+.app-nav .nav-fab-icon {
+  display: block;
+  transition: transform 0.15s ease;
+}
+/* Open state: rotate the "+" into an "×" and deepen the fill. */
+.app-nav .nav-fab.is-open { background: var(--accent-deep); }
+.app-nav .nav-fab.is-open .nav-fab-icon { transform: rotate(45deg); }
+
+/* Hover feedback only on devices with a real pointer — a tap on a touch device
+   must not leave a "stuck" hover background on the nav item it activated. */
+@media (hover: hover) {
+  .app-nav .nav-item:hover { background: var(--surface-2); }
+  .app-nav .nav-fab:hover { background: var(--accent-deep); }
+}
+
+/* Tablet / desktop: nav moves to the left as a sidebar; FAB becomes a row. */
+@media (min-width: 500px) {
+  .app-shell { flex-direction: row; }
+  .app-nav {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 200px;
+    padding: var(--gap) 0;
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    align-items: stretch;
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-top: none;
+    border-right: 1px solid var(--border);
+  }
+  .app-nav .nav-item,
+  .app-nav .nav-fab {
+    flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: auto;
+    height: auto;
+    min-height: 44px;
+    margin: 2px 8px;
+    padding: 0.9em var(--gap);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .app-nav .nav-item[aria-current="page"],
+  .app-nav .nav-fab[aria-current="page"] { color: var(--accent); font-weight: 700; }
+  .app-nav .nav-indicator { display: none; }
+  .app-nav .nav-fab {
+    background: transparent;
+    box-shadow: none;
+    margin-top: 0;
+    justify-self: auto;
+    align-self: auto;
+  }
+  .app-nav .nav-fab .nav-label { display: inline; }
+  .app-nav .nav-fab-icon { display: none; }
+  .app-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .app-content { padding-bottom: var(--gap); }
+}
+
+/* On the sidebar the FAB is a plain text row (transparent), so its hover should
+   match the other nav rows rather than the mobile FAB's deep-accent fill. */
+@media (min-width: 500px) and (hover: hover) {
+  .app-nav .nav-fab:hover { background: var(--surface-2); }
+}
+
+/* ---- Cards / lists ---- */
+
+.card {
+  background: var(--surface);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--gap);
+  transition: box-shadow 0.15s ease;
+}
+.card:hover { box-shadow: var(--shadow-hover); }
+.grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+@media (min-width: 500px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+.muted { color: var(--text-muted); }
+.pill { display: inline-block; padding: 0.1em 0.6em; border-radius: 999px; font-size: 0.8rem; background: var(--surface-2); }
+.pill.above { color: var(--above); }
+.pill.below { color: var(--below); }
+.pill.ok { color: var(--ok); }
+
+/* ---- Centered screens (onboarding, lock) ---- */
+
+.center-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap);
+}
+.center-screen .panel { width: 100%; max-width: 380px; }
+.field { margin-bottom: var(--gap); }
+
+/* Forgot-password / erase recovery on the lock screen. Kept clearly secondary
+   so it is never mistaken for Unlock. */
+.lock-forgot { margin-top: var(--gap); text-align: center; }
+.lock-forgot > .link-button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 0.5em 0;
+  font-size: 0.9em;
+}
+.lock-forgot > .link-button:hover { background: transparent; text-decoration: underline; }
+.lock-forgot > p { text-align: left; }
+.lock-forgot-actions { display: flex; gap: 12px; margin-top: var(--gap); }
+.lock-forgot-actions button { flex: 1; }
+
+/* ---- Toasts ---- */
+
+.toast-host {
+  position: fixed;
+  left: 50%;
+  /* Clear the bottom nav AND the raised center FAB. */
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 40px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+  width: min(92vw, 420px);
+}
+.toast {
+  padding: 0.7em 1em;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.9rem;
+}
+.toast.error { background: var(--danger); color: #fff; }
+.toast.success { background: var(--ok); color: #fff; }
+.toast.has-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.toast-action {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+@media (min-width: 500px) { .toast-host { bottom: 16px; } }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Modal dialog (native <dialog> in the top layer — survives view re-renders).
+   Used for the import password prompt. Theme-aware via the shared variables. */
+dialog.modal {
+  border: none;
+  padding: 0;
+  border-radius: var(--radius);
+  width: min(420px, calc(100vw - 32px));
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-hover);
+}
+dialog.modal::backdrop {
+  background: rgba(6, 16, 18, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.modal-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+}
+.modal-box h3 { margin: 0; }
+
+/* ── Add-data action menu (opened from the center FAB) ─────────────────────
+   Native <dialog> in the top layer. MOBILE ONLY: a bottom sheet above the nav
+   bar (the sidebar "Data" item navigates directly, so no popover). Theme-aware. */
+dialog.fab-menu {
+  border: none;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+  max-height: calc(100dvh - 32px);
+}
+dialog.fab-menu::backdrop {
+  background: rgba(22, 40, 44, 0.4);
+}
+/* Mobile bottom sheet: full-width, pinned above the nav bar, rounded top. */
+dialog.fab-menu-sheet {
+  position: fixed;
+  margin: 0;
+  inset: auto 0 calc(var(--nav-h) + env(safe-area-inset-bottom)) 0;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -12px 32px rgba(23, 38, 44, 0.18);
+}
+.fab-menu-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+}
+.fab-menu-sheet .fab-menu-panel {
+  padding: 10px 14px calc(16px + env(safe-area-inset-bottom));
+}
+/* Drag-handle affordance at the top of the mobile sheet. */
+.fab-menu-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--switch-off);
+  margin: 2px auto 8px;
+}
+.fab-menu-action {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: inherit;
+  border-radius: 14px;
+  padding: 10px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .fab-menu-action:hover { background: var(--surface-2); }
+}
+.fab-menu-tile {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fab-menu-tile svg { width: 22px; height: 22px; }
+.fab-menu-tile-accent {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.fab-menu-tile-soft {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.fab-menu-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.fab-menu-title { font-weight: 700; font-size: 0.98rem; }
+.fab-menu-desc { color: var(--text-muted); font-size: 0.8rem; line-height: 1.25; }
+
+/* Ghost link under the actions → the full Data page (specific formats / packs). */
+.fab-menu-open-data {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 2px;
+}
+@media (hover: hover) {
+  .fab-menu-open-data:hover { background: var(--surface-2); }
+}
+
+/* ── Element states (redesign IA, screen 4) ───────────────────────────────
+   One focus ring everywhere via :focus-visible — never a bare outline:none.
+   Hover animates only paint properties, never layout. */
+:where(a, button, input, select, textarea, summary, [tabindex], .switch, .row-nav, .format-card):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+:where(button, .row-nav, .format-card, .switch) {
+  transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+/* Switch: shared toggle replacing raw checkboxes (44×26, thumb 20). */
+.switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 26px;
+  border: none;
+  border-radius: 999px;
+  background: var(--switch-off);
+  cursor: pointer;
+  padding: 0;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.25);
+  transition: left 0.15s ease;
+}
+.switch[aria-checked='true'] {
+  background: var(--accent);
+}
+.switch[aria-checked='true']::after {
+  left: 21px;
+}
+
+/* Styled checkbox: a native <input type="checkbox"> (a11y + label-click intact)
+   with only its look replaced. Shared so any future multi-select reuses it. The
+   focus ring comes from the :focus-visible list above (matches `input`). */
+.check {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border-radius: 7px;
+  border: 1.5px solid #b9cdd1;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.check:checked {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px;
+}
+:root[data-theme='light'] .check {
+  border-color: #b9cdd1;
+  background-color: #fff;
+}
+:root[data-theme='dark'] .check {
+  border-color: var(--switch-off);
+  background-color: var(--surface);
+}
+/* Keep the checked fill winning over the explicit data-theme unchecked rules. */
+:root[data-theme='light'] .check:checked,
+:root[data-theme='dark'] .check:checked {
+  border-color: var(--accent);
+  background-color: var(--accent);
+}
+
+/* Import ⇄ Export data switcher (segmented pill; shared by both pages). */
+.data-switch {
+  display: inline-flex;
+  align-self: flex-start;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+}
+.data-switch-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 8px 20px;
+  min-height: 40px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.data-switch-btn:hover {
+  color: var(--text);
+}
+.data-switch-btn.is-active,
+.data-switch-btn.is-active:hover {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+
+/* Tag chips: one shared filter chip (interactive) + a mini row-label variant,
+   replacing the three per-view copies. Theme-aware via the tokens. */
+.tag-chip {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  min-height: 34px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.tag-chip:hover {
+  color: var(--text);
+}
+.tag-chip.is-active,
+.tag-chip.is-active:hover {
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+.tag-chip--mini {
+  min-height: 0;
+  padding: 2px 9px;
+  font-size: 0.7rem;
+  cursor: default;
+  background: var(--accent-soft);
+  color: var(--text-muted);
+}
+/* "Watched" filter chip: a small leading star before the label. */
+.tag-chip--star {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tag-chip--star .tag-chip-star {
+  color: var(--accent);
+  flex: none;
+}
+
+/* ---- Shared value+unit typography (format-value.ts, §1d) ----
+ * The number is tabular and weighted; the unit is muted and a step smaller,
+ * with powers set via <sup>. Caller-supplied value/unit classes (loaded from
+ * a view stylesheet, i.e. later in the cascade) intentionally override these. */
+.value-unit {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.value-unit__num {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.value-unit__unit {
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+.value-unit__unit sup {
+  font-size: 0.72em;
+}
+.value-unit--emph .value-unit__num {
+  font-weight: 800;
+  color: var(--accent);
+}
+.value-unit--warn .value-unit__num {
+  color: var(--danger);
+}

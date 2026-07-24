@@ -1,0 +1,59 @@
+/* CSV import / column-mapping screen (phase 2). Functional styling on the
+   shared design tokens; refined separately. */
+
+.csv-formats {
+  display: flex;
+  gap: var(--gap);
+  flex-wrap: wrap;
+  margin-bottom: var(--gap);
+}
+.csv-formats .field {
+  flex: 1;
+  min-width: 160px;
+  margin-bottom: 0;
+}
+
+.csv-mapping {
+  margin-bottom: var(--gap);
+}
+.csv-map-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.csv-map-row:last-child {
+  border-bottom: none;
+}
+.csv-col-name {
+  flex: 1;
+  font-weight: 600;
+  word-break: break-word;
+}
+.csv-map-row select {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 140px;
+}
+
+.csv-preview {
+  margin-bottom: var(--gap);
+}
+.csv-scroll {
+  overflow-x: auto;
+}
+.csv-preview table {
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.csv-preview th,
+.csv-preview td {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  text-align: left;
+}
+.csv-preview th {
+  background: var(--surface-2);
+}

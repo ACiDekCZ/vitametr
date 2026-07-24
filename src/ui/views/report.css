@@ -1,0 +1,275 @@
+/* Health summary report — display-first, with a clean print layout. */
+
+/* Back-to-overview link, mirroring the metric detail's back button. */
+.report-back {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  margin: 2px 0 6px;
+  cursor: pointer;
+}
+.report-back:hover {
+  text-decoration: underline;
+}
+
+/* Title and print action share one aligned row. */
+.report-titlerow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  flex-wrap: wrap;
+}
+.report-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Range | As-of-date mode switch (same pill segment as elsewhere). */
+.report-mode-segment {
+  display: inline-flex;
+  flex-wrap: wrap;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+}
+.report-mode-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-height: 40px;
+}
+.report-mode-btn:hover {
+  color: var(--text);
+}
+.report-mode-btn.is-active,
+.report-mode-btn.is-active:hover {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+.report-asof-date {
+  font: inherit;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  min-height: 40px;
+}
+/* Range mode hides the date input but KEEPS its box, so toggling the mode
+   doesn't reflow the toolbar and make the print button jump. `display` is
+   restored because the UA sheet's `[hidden] { display: none }` would otherwise
+   collapse the box and defeat the reserved space. */
+.report-asof-date[hidden] {
+  visibility: hidden;
+  display: inline-block;
+}
+.report-age {
+  display: block;
+  font-size: 0.78rem;
+}
+
+.report-header h1 {
+  margin-bottom: 2px;
+}
+
+/* Screen-only metric picker: adjust which metrics the report shows (the subset
+   handed off from a filtered overview is pre-checked). Never printed. */
+.report-select {
+  margin: 8px 0 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.report-select > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 14px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.report-select-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px 16px;
+  padding: 4px 14px 14px;
+}
+.report-select-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.report-attention {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--warn);
+  border-radius: var(--radius);
+  padding: var(--gap);
+  margin-bottom: var(--gap);
+}
+.report-attention h2 {
+  margin-top: 0;
+}
+.report-attention ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.report-attention li {
+  cursor: pointer;
+  padding: 2px 0;
+}
+.report-attention li.attn-range {
+  color: var(--above);
+}
+
+.report-section {
+  margin-bottom: var(--gap);
+}
+
+/* ---- Mobile default: stacked card-rows (the table overflows here) ---- */
+.report-scroll {
+  display: none;
+}
+.report-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.report-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+.report-card-name {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.report-card-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+}
+.report-card-grid dt {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.report-card-grid dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+/* Out-of-range rows carry the state at a glance (subtle, print-friendly). */
+.report-card.out-of-range {
+  background: var(--above-soft);
+  border-left: 3px solid var(--above);
+}
+
+/* ---- Wide screens & print: the table ---- */
+@media (min-width: 560px) {
+  .report-cards {
+    display: none;
+  }
+  .report-scroll {
+    display: block;
+    overflow-x: auto;
+  }
+}
+.report-section table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.report-section th,
+.report-section td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.report-section th {
+  border-bottom: 2px solid var(--border);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.report-section td.num,
+.report-section th.num {
+  font-variant-numeric: tabular-nums;
+}
+/* Out-of-range rows carry the state at a glance (subtle, print-friendly). */
+.report-section tr.out-of-range td {
+  background: var(--above-soft);
+}
+.report-section tr.out-of-range td:first-child {
+  box-shadow: inset 3px 0 0 var(--above);
+}
+
+.report-disclaimer {
+  font-size: 0.85rem;
+  margin-top: var(--gap);
+}
+.report-footer {
+  font-size: 0.75rem;
+}
+
+/* ---- Print: show only the report, clean margins ---- */
+@media print {
+  .app-header,
+  .app-nav,
+  .report-back,
+  .report-toolbar,
+  .report-select,
+  .toast-host {
+    display: none !important;
+  }
+  .app-content {
+    max-width: none;
+    padding: 0;
+  }
+  /* Print always uses the table, never the mobile cards. */
+  .report-cards {
+    display: none !important;
+  }
+  .report-scroll {
+    display: block !important;
+    overflow-x: visible;
+  }
+  .report-attention {
+    border-left-color: #999;
+  }
+  .report-section tr.out-of-range td {
+    background: var(--above-soft);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .report-section td,
+  .report-section th {
+    border-color: #ccc;
+  }
+  .report-attention li {
+    cursor: auto;
+  }
+  a,
+  .report-section,
+  .report-attention {
+    break-inside: avoid;
+  }
+}

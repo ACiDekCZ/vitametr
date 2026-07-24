@@ -1,0 +1,43 @@
+/**
+ * Shared source picker. The <select> and kind <select> carry
+ * .settings-inline-select (pill look, styled globally in settings.css). This
+ * file lays out the picker container and the revealed new-source sub-form so it
+ * aligns like the sources-dialog add-form.
+ */
+
+.source-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.source-picker > select {
+  max-width: 100%;
+}
+
+.source-picker-new {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
+.source-picker-new[hidden] {
+  display: none;
+}
+
+.source-picker-name {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+.source-picker-name::placeholder {
+  color: var(--text-muted);
+}

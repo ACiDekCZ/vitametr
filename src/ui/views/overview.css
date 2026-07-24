@@ -1,0 +1,613 @@
+/*
+ * Overview screen (K8d) — restrained clinical, mobile-first.
+ * Values in the foreground, labels muted, colour used only to flag range.
+ * Layout reuses the shared .grid / .card tokens from styles.css.
+ */
+
+/* Header: small muted date line above the "Your values" title. */
+.overview-date {
+  margin: 8px 0 2px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.overview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  flex-wrap: wrap;
+}
+.overview-header h1 {
+  margin: 0 0 0.2em;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* Summary chips: soft pills with a small state dot. */
+.overview-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 var(--gap);
+}
+.overview-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.overview-chip .chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentcolor;
+  flex: none;
+}
+.overview-chip.ok { background: var(--ok-soft); color: var(--ok); }
+.overview-chip.above { background: var(--above-soft); color: var(--above); }
+.overview-chip.below { background: var(--below-soft); color: var(--below); }
+.overview-chip.muted { background: var(--surface-2); color: var(--text-muted); }
+
+.overview-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 var(--gap);
+}
+.overview-toolbar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+.overview-toolbar input {
+  width: auto;
+  margin: 0;
+}
+
+/* Positioned host so the star can overlay the card's top-right corner without
+   nesting a button inside the card button. Fills its grid cell. */
+.metric-card-wrap {
+  position: relative;
+  display: flex;
+}
+.metric-card-wrap > .metric-card {
+  width: 100%;
+}
+
+/* A card is a tappable button; strip the button chrome, keep the card look. */
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+}
+/* Leave room in the top row so the value/age never slide under the star. */
+.metric-card--watchable .metric-top {
+  padding-right: 34px;
+}
+.metric-card:hover { background: var(--surface); box-shadow: var(--shadow-hover); }
+
+/* Row 1: name … age. */
+.metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.metric-card .metric-name {
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  /* Long names wrap to two lines here too, instead of a one-line ellipsis. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.25;
+}
+.metric-card .metric-age {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+  flex: none;
+}
+
+/* Row 2: value + unit + delta … sparkline. */
+.metric-value-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.metric-card .metric-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+  flex-wrap: wrap;
+}
+.metric-card .metric-number {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.metric-card .metric-unit {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.metric-delta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.metric-delta.ok { color: var(--ok); background: var(--ok-soft); }
+.metric-delta.above { color: var(--above); background: var(--above-soft); }
+.metric-delta.below { color: var(--below); background: var(--below-soft); }
+.metric-delta.muted { color: var(--text-muted); background: var(--surface-2); }
+.metric-spark {
+  width: 100px;
+  height: 36px;
+  flex: none;
+}
+
+/* Row 3: reference range-bar with zones + marker, and the range text. */
+.metric-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.range-track {
+  position: relative;
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+}
+.range-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid var(--surface);
+  box-shadow: 0 1px 3px rgba(22, 40, 44, 0.3);
+  background: var(--accent);
+}
+.range-marker.ok { background: var(--ok); }
+.range-marker.above { background: var(--above); }
+.range-marker.below { background: var(--below); }
+.range-text {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  flex: none;
+}
+
+/* Empty / sparse-state prompt: a friendly card nudging the user to add data. */
+.overview-prompt {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin: 0 0 var(--gap);
+}
+.overview-prompt-text {
+  margin: 0 0 var(--gap);
+  color: var(--text-muted);
+}
+.overview-prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ---- Tag section grouping (metric tags, phase 1) ------------------------- */
+
+.overview-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.overview-group + .overview-group {
+  margin-top: 18px;
+}
+.overview-group-title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* ---- Header actions: Summary button + grid/list layout toggle ------------ */
+
+.overview-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+.overview-layout-toggle .seg-btn {
+  padding: 6px 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+.overview-layout-toggle .seg-btn--active {
+  color: var(--text);
+}
+.overview-layout-toggle .seg-btn svg {
+  display: block;
+}
+
+/* Summary / print button: gains an accent-soft highlight while the overview is
+   filtered (a signal it will carry the filter to the report). */
+.overview-summary-btn {
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.overview-summary-btn.is-filter {
+  background: var(--accent-soft);
+  color: #17545f;
+  border-color: var(--accent-soft);
+}
+
+/* Filter-aware print menu: a popover under the button on wide screens, a bottom
+   sheet on mobile. A modal <dialog> gives the backdrop, Escape and focus-trap. */
+.overview-print-menu {
+  border: none;
+  padding: 0;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 10px 30px rgba(22, 40, 44, 0.22);
+  max-width: min(92vw, 320px);
+  color: var(--text);
+}
+.overview-print-menu::backdrop {
+  background: rgba(22, 40, 44, 0.28);
+}
+.overview-print-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+.overview-print-item {
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px 14px;
+  min-height: 44px;
+}
+.overview-print-item:hover:not([disabled]) {
+  background: var(--surface-2);
+}
+.overview-print-item.primary {
+  background: var(--accent-soft);
+  color: #17545f;
+}
+.overview-print-item[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+@media (max-width: 559px) {
+  /* Bottom sheet: full-width, pinned to the bottom, positioned by CSS only. */
+  .overview-print-menu {
+    margin: auto auto 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 20px 20px 0 0;
+  }
+  .overview-print-panel {
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* As-of (time-travel) ghost button + revealed pill date input. */
+.overview-asof-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.overview-asof-btn[hidden],
+.overview-asof-date[hidden] {
+  display: none;
+}
+.overview-asof-date {
+  font: inherit;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  min-height: 40px;
+}
+.overview-asof-date:hover {
+  border-color: var(--accent);
+}
+
+/* ---- Time-travel banner: unmissable "showing state as of …" bar ---------- */
+
+.overview-asof-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--accent-soft);
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin: 0 0 var(--gap);
+}
+.overview-asof-banner-text {
+  font-weight: 700;
+  color: var(--text);
+}
+.overview-asof-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.overview-asof-export,
+.overview-asof-close {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 6px 12px;
+  min-height: 36px;
+  color: var(--accent);
+  background: transparent;
+}
+.overview-asof-export:hover,
+.overview-asof-close:hover {
+  border-color: var(--accent);
+}
+.overview-asof-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+
+/* ---- Empty-at-date placeholders (grid card + list row) ------------------- */
+
+.metric-card--empty {
+  opacity: 0.7;
+}
+.metric-empty {
+  font-size: 0.95rem;
+}
+.overview-row--empty .overview-row-value {
+  color: var(--text-muted);
+}
+
+/* ---- Filter row: pill search + tag chips (both layouts) ------------------ */
+
+.overview-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 var(--gap);
+}
+.overview-search {
+  border-radius: 999px;
+  padding-left: 0.9em;
+}
+.overview-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Ghost button reused for "Clear filters" in the empty-filter state. */
+.overview-ghost {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-height: 40px;
+}
+.overview-ghost:hover {
+  border-color: var(--accent);
+}
+
+/* ---- List layout --------------------------------------------------------- */
+
+.overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+.overview-list {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* One shared column template so the header aligns with the rows. Mobile: a
+   compact two-line row (name+value, then age+status); the Change column and the
+   column header are dropped. Desktop (sidebar width): the full 5-column grid
+   — Veličina | Hodnota | Změna | Měřeno | Stav — with everything but the name
+   right-aligned so the status pill never collides with the (ellipsised) name. */
+.overview-row {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'metric value'
+    'age status';
+  gap: 4px 12px;
+  align-items: center;
+}
+.overview-row + .overview-row {
+  border-top: 1px solid var(--border);
+}
+@media (hover: hover) {
+  .overview-row:hover {
+    background: var(--surface-2);
+  }
+}
+.overview-list-head {
+  display: none;
+}
+
+.overview-row-metric {
+  grid-area: metric;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.overview-row-name {
+  min-width: 0;
+  flex: 0 1 auto;
+  overflow: hidden;
+  /* Wrap to two lines before ellipsising — long analyte names (e.g. "Střední
+     koncentrace hemoglobinu v erytrocytu") stay legible instead of being cut. */
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.25;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.overview-row-value {
+  grid-area: value;
+  justify-self: end;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.overview-row-value .metric-value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+}
+.overview-row-value .metric-number {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.overview-row-value .metric-unit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+/* Reference range in the display unit. Hidden on the compact phone list (the
+   status pill carries the meaning there); revealed at the sidebar width. */
+.overview-row-range {
+  grid-area: range;
+  display: none;
+  justify-self: end;
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.overview-row-change {
+  grid-area: change;
+  display: none;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.overview-row-age {
+  grid-area: age;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+  align-self: center;
+  font-variant-numeric: tabular-nums;
+}
+.overview-row-status {
+  grid-area: status;
+  justify-self: end;
+  align-self: center;
+}
+.overview-status.ok { background: var(--ok-soft); color: var(--ok); }
+.overview-status.above { background: var(--above-soft); color: var(--above); }
+.overview-status.below { background: var(--below-soft); color: var(--below); }
+.overview-status.muted { background: var(--surface-2); color: var(--text-muted); }
+
+@media (min-width: 900px) {
+  .overview-list-head,
+  .overview-row {
+    grid-template-columns: minmax(0, 2.4fr) 0.9fr 0.9fr 0.6fr 0.7fr 0.7fr;
+    grid-template-areas: 'metric value range change age status';
+    align-items: center;
+    gap: 12px;
+  }
+  .overview-list-head {
+    display: grid;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+  }
+  /* Header cells align with their column: value/change/measured push right so
+     the numbers line up under them; status stays right in the last column. */
+  .overview-list-head .overview-row-value,
+  .overview-list-head .overview-row-range,
+  .overview-list-head .overview-row-change,
+  .overview-list-head .overview-row-age {
+    text-align: right;
+    justify-self: end;
+  }
+  .overview-row-range {
+    display: block;
+  }
+  .overview-row-change {
+    display: flex;
+  }
+  .overview-row-age {
+    text-align: right;
+    justify-self: end;
+  }
+}

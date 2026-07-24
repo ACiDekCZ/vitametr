@@ -1,0 +1,8 @@
+MSH|^~\&|LIS|SampleLab|EHR|Clinic|20230210084500||ORU^R01|MSG00001|P|2.5.1
+PID|1||PID12345^^^SampleLab^MR||Doe^John^Q||19800101|M
+OBR|1||ORD98765|24323-8^Comprehensive metabolic panel^LN|||20230210074500
+OBX|1|NM|2345-7^Glucose^LN||5.4|mmol/L|3.9-5.6|N|||F
+OBX|2|NM|2093-3^Cholesterol total^LN||5.9|mmol/L|0-5.0|H|||F
+OBX|3|NM|13457-7^LDL cholesterol^LN||3.2|mmol/L|0-3.0|H|||F
+OBX|4|NM|2160-0^Creatinine^LN||78|umol/L|64-104|N|||F
+OBX|5|NM|3016-3^TSH^LN||2.1|mIU/L|0.27-4.2|N|||F

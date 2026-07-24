@@ -1,0 +1,436 @@
+/*
+ * Metric-detail chart (K8e). Restrained, clinical, theme-aware — colours come
+ * from the shared CSS variables (styles.css). Out-of-range and censored points
+ * differ by SHAPE, so meaning survives without colour perception.
+ */
+
+.chart {
+  width: 100%;
+}
+
+.chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  touch-action: pan-y;
+}
+
+/* Reference-range band — soft accent tint, rounded, no stroke (spec §4). */
+.chart-band {
+  fill: var(--accent);
+  fill-opacity: 0.07;
+}
+
+/* In-band caption "referenční rozmezí X–Y" (text supplied by the view). */
+.chart-band-label {
+  fill: var(--text-faint);
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font);
+}
+
+/* Area under the line: accent gradient 0.18 → 0 (stops set via CSS). */
+.chart-area {
+  stroke: none;
+}
+.chart-area-stop-top {
+  stop-color: var(--accent);
+  stop-opacity: 0.18;
+}
+.chart-area-stop-bottom {
+  stop-color: var(--accent);
+  stop-opacity: 0;
+}
+
+/* Faint horizontal gridlines at Y ticks. */
+.chart-gridline {
+  stroke: var(--border);
+  stroke-width: 1;
+  stroke-opacity: 0.6;
+}
+
+.chart-tick-label {
+  fill: var(--text-faint);
+  font-size: 10px;
+  font-family: var(--font);
+}
+.chart-tick-y {
+  text-anchor: end;
+  dominant-baseline: middle;
+}
+.chart-tick-x {
+  text-anchor: middle;
+  dominant-baseline: hanging;
+}
+.chart-unit-label {
+  fill: var(--text-faint);
+  font-size: 10px;
+  font-family: var(--font);
+  text-anchor: end;
+}
+
+/* Connecting line. */
+.chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* In-range point — filled dot with a white ring. */
+.chart-point {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+/* Newest point is emphasised (larger radius set in the renderer). */
+.chart-point--last {
+  stroke-width: 2;
+}
+
+/* Out-of-range: diamond shape; colour reinforces direction. */
+.chart-point--out {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+.chart-point--above {
+  fill: var(--above);
+}
+.chart-point--below {
+  fill: var(--below);
+}
+
+/* Censored: open circle + arrow. */
+.chart-point-open {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.chart-point--censored.chart-point--above .chart-point-open {
+  stroke: var(--above);
+}
+.chart-point--censored.chart-point--below .chart-point-open {
+  stroke: var(--below);
+}
+.chart-arrow {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.chart-point--censored.chart-point--above .chart-arrow {
+  stroke: var(--above);
+}
+.chart-point--censored.chart-point--below .chart-arrow {
+  stroke: var(--below);
+}
+
+/* Invisible, generous hit target for hover/tap. */
+.chart-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+/* Tooltip — absolutely positioned inside the chart container. */
+.chart-tooltip {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  max-width: 70%;
+  padding: 0.4em 0.6em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.chart-tooltip[hidden] {
+  display: none;
+}
+.chart-tooltip-row:first-child {
+  font-weight: 600;
+}
+
+/* ---- Metric detail view layout ---- */
+
+/* Back link. */
+.metric-back {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  margin: 2px 0 6px;
+  cursor: pointer;
+}
+.metric-back:hover {
+  background: transparent;
+  text-decoration: underline;
+}
+
+/* Header: name + current value on the left, unit switch on the right. */
+.metric-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.metric-header-main {
+  min-width: 0;
+}
+/* Title + star quick-toggle on one row. */
+.metric-title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.metric-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 6px;
+}
+.metric-title-row .metric-title {
+  margin-bottom: 0;
+}
+.metric-current {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.metric-value {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.metric-value-unit {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Non-interactive tag chips under the metric title. */
+.metric-header-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Segmented control (period). */
+.seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+  flex: none;
+}
+.metric-period {
+  margin-bottom: 14px;
+}
+.seg-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  min-height: 34px;
+}
+.seg-btn:hover {
+  background: transparent;
+}
+.seg-btn--active {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+.seg-btn--active:hover {
+  background: var(--surface);
+}
+
+.metric-chart-card {
+  padding: 18px 12px 12px;
+  margin-bottom: 14px;
+}
+.metric-chart {
+  position: relative;
+  width: 100%;
+}
+
+/* Chart card header: the long-term trend word as a small labelled chip. */
+.metric-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.chart-trend-chip {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  padding: 3px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.metric-warning {
+  margin: 0 0 var(--gap);
+  color: var(--warn);
+  font-size: 0.9rem;
+}
+
+/* Min / Average / Maximum mini-cards. */
+.metric-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.metric-stats:empty {
+  display: none;
+}
+.metric-stat {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+.metric-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin-bottom: 2px;
+}
+.metric-stat-value {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Measurements card-list. */
+.metric-list-heading {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+.metric-list {
+  padding: 0;
+  overflow: hidden;
+}
+.metric-row {
+  display: flex;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 18px;
+  flex-wrap: wrap; /* on a narrow screen the whole trailing block wraps below */
+}
+.metric-row + .metric-row {
+  border-top: 1px solid var(--divider);
+}
+.metric-row-meta {
+  flex: 1;
+  min-width: max-content; /* the date column never shrinks below its content */
+}
+.metric-row-date {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap; /* the date never breaks across lines */
+}
+.metric-row-source {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+.metric-row-trailing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.metric-row-delta {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap; /* delta text ("up 0.8 mmol/l") never breaks */
+}
+.metric-row-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.metric-row .pill {
+  font-weight: 700;
+}
+
+/* Row actions: revealed on hover (desktop); always visible on touch/mobile. */
+.metric-row-actions {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.metric-row:hover .metric-row-actions,
+.metric-row:focus-within .metric-row-actions {
+  opacity: 1;
+}
+.metric-icon-btn {
+  padding: 0.3em 0.6em;
+  font-size: 0.85rem;
+  min-height: 34px;
+}
+.metric-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.metric-edit-row {
+  display: block;
+}
+.metric-edit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  padding: 0.5em 0;
+}
+.metric-edit-field {
+  flex: 1 1 120px;
+  min-width: 100px;
+}
+.metric-edit-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex: 1 1 100%;
+}
+
+/* Touch / narrow screens: no hover, so keep the actions reachable. */
+@media (hover: none), (max-width: 560px) {
+  .metric-row-actions {
+    opacity: 1;
+  }
+}
+@media (max-width: 420px) {
+  .metric-value {
+    font-size: 2rem;
+  }
+  .metric-stat {
+    padding: 10px 12px;
+  }
+}

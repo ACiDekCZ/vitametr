@@ -1,0 +1,259 @@
+/*
+ * Export wizard (phase 3). Functional, coherent styling built on the shared
+ * design tokens (styles.css) and the same segmented-control / format-card
+ * patterns as the Import page — a dedicated visual redesign comes later. Reuses
+ * the global `.format-card*` classes (defined in import.css) for the format
+ * tiles, adding only a selected state here. Theme-aware via the tokens.
+ */
+
+.export-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+.export-subtitle {
+  margin: -8px 0 0;
+  font-size: 0.95rem;
+}
+
+.export-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.export-section-title {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* Metric selection: search + select all/none, then a checklist. */
+.export-metric-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.export-search {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.export-ghost {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  min-height: 40px;
+}
+.export-ghost:hover {
+  border-color: var(--accent);
+}
+
+.export-filename-field {
+  display: block;
+}
+.export-filename {
+  width: 100%;
+  min-width: 0;
+}
+
+.export-metric-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.export-metric-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  border-top: 1px solid var(--border);
+}
+.export-metric-row:first-child {
+  border-top: none;
+}
+.export-metric-row[hidden] {
+  display: none;
+}
+/* The checkbox itself is the shared `.check` (styles.css). */
+.export-metric-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.export-metric-name {
+  font-weight: 600;
+}
+.export-metric-count {
+  font-size: 0.8rem;
+}
+.export-empty {
+  margin: 0;
+}
+
+/* Period segmented control (same look as the Import mode segment). */
+.export-segment {
+  display: inline-flex;
+  align-self: flex-start;
+  flex-wrap: wrap;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+}
+.export-segment-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 8px 18px;
+  min-height: 40px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.export-segment-btn:hover {
+  color: var(--text);
+}
+.export-segment-btn.is-active,
+.export-segment-btn.is-active:hover {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+
+/* Range section: mode segment sits above the period presets / snapshot box. */
+.export-mode-segment {
+  margin-bottom: 4px;
+}
+.export-period-box,
+.export-snapshot-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.export-period-box[hidden],
+.export-snapshot-box[hidden] {
+  display: none;
+}
+
+/* As-of controls: a "today" pill next to a pill-styled native date input. */
+.export-asof-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.export-asof-today {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-height: 40px;
+}
+.export-asof-today:hover {
+  border-color: var(--accent);
+}
+.export-asof-today.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 700;
+}
+.export-asof-date {
+  font: inherit;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-height: 40px;
+}
+.export-asof-hint {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+/* Snapshot-only per-metric note ("no value at that date"). */
+.export-metric-note {
+  font-size: 0.8rem;
+}
+.export-metric-note[hidden] {
+  display: none;
+}
+
+/* Format tiles: reuse .format-card grid; three interop formats. */
+.export-format-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 500px) {
+  .export-format-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.export-format-card {
+  cursor: pointer;
+}
+.export-format-card.is-selected,
+.export-format-card.is-selected:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Footer: the Export action + a hint when it is disabled. */
+.export-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.export-run:disabled {
+  background: var(--switch-off);
+  border-color: var(--switch-off);
+  color: var(--text-faint);
+  box-shadow: none;
+  opacity: 1;
+  cursor: default;
+}
+.export-hint {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+/* ---- Tag filter (metric tags, phase 1) ----------------------------------
+   The chips are the shared `.tag-chip` (styles.css); this is layout only. When
+   tags are off the row is empty — collapse it so it leaves no gap. */
+
+.export-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.export-tag-filter:empty {
+  display: none;
+  margin: 0;
+}

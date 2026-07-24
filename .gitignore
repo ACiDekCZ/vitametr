@@ -1,0 +1,21 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# Playwright e2e artifacts
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# Local-only working documents — must never reach a public repository
+CLAUDE.md
+docs/
+osobni-zdravotni-casova-rada-high-level-zadani.md
+
+# Dev screenshot artifacts (regenerable via scripts/screenshots.mjs)
+screenshots/
+
+# Local-only lab sample corpus (real/education PDFs — never committed; synthetic fixtures live in test/fixtures/)
+test/fixtures/samples-local/

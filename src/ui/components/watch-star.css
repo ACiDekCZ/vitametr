@@ -1,0 +1,60 @@
+/*
+ * Watch (favorite) star toggle. A ≥44×44 tap target with a small star glyph.
+ * Idle: faint outline. Watched: filled accent, always visible. On hover-capable
+ * pointers an idle star on a tile fades in only when its card is hovered; on
+ * touch (no hover) idle stars stay visible so they are always reachable.
+ */
+
+.watch-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+  border-radius: 999px;
+  flex: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.watch-star:hover {
+  color: var(--accent);
+  background: var(--surface-2);
+}
+.watch-star.is-watched {
+  color: var(--accent);
+}
+.watch-star-icon {
+  display: block;
+}
+
+/* Tile star: floats in the card's top-right corner, above the content. */
+.watch-star--tile {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 1;
+}
+
+/* Inline star (list row / manage row / detail header): a touch tighter. */
+.watch-star--inline {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+/* Desktop declutter: idle tile stars appear on card hover; watched stay put.
+   Touch devices (no hover) keep them visible — handled by the default rule. */
+@media (hover: hover) {
+  .watch-star--tile {
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+  .metric-card-wrap:hover .watch-star--tile,
+  .watch-star--tile.is-watched,
+  .watch-star--tile:focus-visible {
+    opacity: 1;
+  }
+}

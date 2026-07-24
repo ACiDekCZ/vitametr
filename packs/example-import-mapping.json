@@ -1,0 +1,16 @@
+{
+  "format": "vitametr-pack",
+  "version": 1,
+  "id": "example-import-mapping",
+  "name": "Example declarative import mapping",
+  "importMappings": [
+    {
+      "id": "vzor-lab-keyed",
+      "sourceName": "VZOR-LAB (synthetic)",
+      "detect": { "anyOf": ["VZOR-LAB"] },
+      "entrySplit": ";",
+      "pattern": "(?<name>[^:]+):\\s*(?<value>(?:[<>]=?\\s*)?\\d+(?:[.,]\\d+)?)\\s*(?<unit>[^\\s()]+)?\\s*(?:\\(\\s*(?<low>\\d+(?:[.,]\\d+)?)\\s*-\\s*(?<high>\\d+(?:[.,]\\d+)?)\\s*\\))?",
+      "datePattern": "(?<date>\\d{4}-\\d{2}-\\d{2})"
+    }
+  ]
+}

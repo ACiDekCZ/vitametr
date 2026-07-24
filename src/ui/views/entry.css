@@ -1,0 +1,151 @@
+/*
+ * Add Values (entry) screen (K8c). Restrained, mobile-first: big tap targets,
+ * one value row per line, minimal chrome. Reuses shell tokens from styles.css.
+ */
+
+.entry-form { display: flex; flex-direction: column; gap: 12px; }
+
+.entry-subtitle { margin: 0 0 12px; font-size: 0.9rem; }
+
+/* Space the shared Zadat · Import · Export strip from the form below it. */
+.entry-form { margin-top: 12px; }
+
+/* Inputs: soft-filled inside the white card, focus lifts to a white field. */
+.entry-form input,
+.entry-form select {
+  background: var(--bg);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-input);
+  padding: 11px 12px;
+  min-height: 46px;
+  box-sizing: border-box;
+}
+.entry-form input:focus,
+.entry-form select:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  outline: none;
+}
+.entry-form label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+/* Quick-add chips: dashed pills seeded from recently-used metrics. */
+.entry-quickadd { display: flex; flex-direction: column; gap: 8px; }
+.entry-quickadd .quickadd-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.entry-quickadd .quickadd-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.entry-quickadd .quickadd-chip {
+  min-height: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: transparent;
+  border: 1.5px dashed var(--text-faint);
+  border-radius: 999px;
+  padding: 7px 14px;
+}
+.entry-quickadd .quickadd-chip:hover {
+  background: var(--accent-soft);
+  border-style: solid;
+  border-color: var(--accent-soft);
+}
+
+/* Save button: full-width, soft-shadowed accent. */
+.entry-save { display: block; }
+.entry-form .save-values {
+  width: 100%;
+  border-radius: 16px;
+  padding: 15px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(31, 110, 125, 0.3);
+}
+
+.entry-batch { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 500px) {
+  .entry-batch { grid-template-columns: 2fr 1fr; }
+  .entry-batch .field-source { grid-column: 1 / -1; }
+}
+.entry-datetime { display: flex; gap: 12px; }
+.entry-datetime .field { flex: 1; margin-bottom: 0; }
+
+.entry-rows { display: flex; flex-direction: column; gap: 12px; }
+
+.entry-row { position: relative; }
+.entry-row .row-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 500px) {
+  .entry-row .row-grid { grid-template-columns: 2fr 1fr 1fr; align-items: end; }
+  .entry-row .row-grid .field-metric { grid-column: 1 / -1; }
+}
+
+.entry-row .field { margin-bottom: 0; }
+
+/* Metric-picker combobox styles live in components/metric-picker.css. */
+
+.entry-row .row-meta { display: none; margin-top: 10px; }
+.entry-row.expanded .row-meta { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+
+.entry-row .row-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.entry-row .row-actions .spacer { flex: 1; }
+
+/* Multi-select value chips (for 'multi'-valueType metrics). */
+.value-multi-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.value-chip {
+  min-height: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg);
+  border: 1.5px solid var(--text-faint);
+  border-radius: 999px;
+  padding: 7px 14px;
+}
+.value-chip:hover { border-color: var(--accent); }
+.value-chip.is-active {
+  color: var(--accent-contrast, #fff);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.field-hint { font-size: 0.8rem; margin-top: 4px; }
+.field-hint.warn { color: var(--warn); }
+.field-hint.error { color: var(--danger); }
+.field-hint.unresolved { color: var(--text-muted); }
+
+.entry-bp-grid { display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr); }
+.entry-bp-grid .field { margin-bottom: 0; }
+.entry-bp-title { font-weight: 600; margin-bottom: 8px; }
+
+.entry-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.entry-actions .primary { min-width: 140px; }
+.link-button {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  padding: 0.5em 0;
+  text-align: left;
+}
+.link-button:hover { background: transparent; text-decoration: underline; }
+
+.entry-row .remove-row { color: var(--danger); border-color: transparent; background: transparent; }
+
+/* Comfortable tap targets on phones. */
+.entry-form input,
+.entry-form select,
+.entry-form button { min-height: 44px; }

@@ -1,0 +1,634 @@
+/*
+ * Settings screen styles. Mobile-first, card-list layout matching the redesign
+ * handoff (§7). Reuses the design tokens from styles.css; adds only what the
+ * trust banner, segmented language control, card-lists and the guarded
+ * destructive action need.
+ */
+
+.settings-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--gap);
+}
+
+.settings-view > h1 {
+  margin: 8px 0 4px;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* ---- Trust banner -------------------------------------------------------- */
+
+.settings-trust {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent-soft), var(--ok-soft));
+}
+
+.settings-trust-lock {
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+
+.settings-trust-lock rect,
+.settings-trust-lock path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.settings-trust-text {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* ---- Sections (white card-lists) ---------------------------------------- */
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--surface);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--gap);
+}
+
+.settings-section > h2 {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.settings-row + .settings-row {
+  border-top: 1px solid var(--divider);
+}
+
+.settings-row-label {
+  font-weight: 600;
+}
+
+/* ---- Segmented control (language CS/EN) --------------------------------- */
+
+.settings-segment {
+  display: inline-flex;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.settings-segment-btn {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 6px 14px;
+  min-height: 34px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.settings-segment-btn:hover {
+  background: transparent;
+  color: var(--text);
+}
+
+.settings-segment-btn.is-active,
+.settings-segment-btn.is-active:hover {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(22, 40, 44, 0.12);
+}
+
+/* ---- Subsections (passphrase / encryption / export / import) ------------ */
+
+.settings-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--divider);
+}
+
+.settings-subsection > h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Rows of choice buttons (export, confirm/cancel). Unified on the pill language:
+   rounded, borderless, soft surface; primary/danger keep their accent fill. */
+.settings-choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.settings-choice button {
+  border-radius: 999px;
+}
+.settings-choice button:not(.primary):not(.danger) {
+  border: none;
+  background: var(--surface-2);
+  color: var(--text);
+  box-shadow: var(--pill-shadow);
+}
+.settings-choice button:not(.primary):not(.danger):hover {
+  background: var(--surface-2);
+  filter: brightness(0.97);
+}
+
+.settings-choice button[aria-current='true'] {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+/* Tag-filter chip row in the pack export dialog (mirrors the export wizard). */
+.settings-section .export-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.settings-section .export-tag-filter:empty {
+  display: none;
+  margin: 0;
+}
+
+/* Editable filename field (pack export). Label above a full-width input. */
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.settings-field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.settings-pack-filename {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ---- Lists (sources, metrics) ------------------------------------------- */
+
+.settings-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  min-height: 44px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--divider);
+}
+
+.settings-list-row:last-child {
+  border-bottom: none;
+}
+
+/* ---- Inline forms (add source) ------------------------------------------ */
+
+.settings-inline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--divider);
+}
+
+.settings-view input[type='text'],
+.settings-view input[type='password'],
+.settings-view select {
+  font: inherit;
+  width: 100%;
+  padding: 11px 12px;
+  min-height: 46px;
+  box-sizing: border-box;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-input);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.settings-view input[type='text']:focus,
+.settings-view input[type='password']:focus,
+.settings-view select:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  outline: none;
+}
+
+.settings-view .field {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-view .field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+button.primary {
+  align-self: flex-start;
+}
+
+/* ---- Destructive zone ---------------------------------------------------- */
+
+.settings-wipe-btn {
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 16px;
+  padding: 14px;
+  width: 100%;
+  background: var(--above-soft);
+  color: var(--above);
+  transition: filter 0.12s ease;
+}
+
+.settings-wipe-btn:hover {
+  background: var(--above-soft);
+  filter: brightness(0.96);
+}
+
+.settings-danger-text {
+  color: var(--above);
+  font-weight: 600;
+  margin: 0;
+}
+
+.settings-error {
+  margin: 0;
+}
+
+.settings-attribution {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+/* ---- Wider screens ------------------------------------------------------- */
+
+@media (min-width: 600px) {
+  .settings-inline-form {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+  .settings-inline-form .field {
+    flex: 1;
+  }
+}
+
+/* Catalog tools: a compact, scrollable metric checklist for selective export. */
+.settings-catalog-list {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  margin: 8px 0;
+}
+.settings-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.settings-check-row input {
+  width: auto;
+  margin: 0;
+}
+
+/* ---- App-only redesign (screen 3): group cards + nav rows ---------------- */
+
+/* A white section card with an uppercase, faint group heading. */
+.settings-group {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.settings-group-title {
+  margin: 0;
+  padding: 14px 18px 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.settings-group-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A navigational / action row rendered as a full-width button. */
+.settings-row-nav {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  border-radius: 0;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+.settings-row-nav:hover {
+  background: var(--bg);
+}
+
+.settings-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.settings-row-meta {
+  font-size: 0.82rem;
+  font-weight: 400;
+}
+
+.settings-row-chevron {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+/* Auto-lock select styled as a pill — stays a native <select> (free mobile
+   picker), only the look changes: --surface-2 fill, pill radius, custom chevron,
+   focus ring via the shared :focus-visible list. */
+/* Pill-styled native <select> — used by the auto-lock row (inside .settings-view)
+   and by the sources dialog's Type picker (inside a top-layer .modal). The
+   selector is unscoped so the look applies in both contexts; the class name is
+   specific enough to not leak to plain selects. */
+select.settings-inline-select {
+  width: auto;
+  min-width: 0;
+  min-height: 40px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 34px 8px 14px;
+  font-weight: 700;
+  color: var(--text);
+  background-color: var(--surface-2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d7278' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+:root[data-theme='dark'] select.settings-inline-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2393a6ab' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+:root[data-theme='light'] select.settings-inline-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d7278' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* ---- Data-sources dialog ------------------------------------------------- */
+
+/* Subtle divider between the dialog's sections (list / add-form / footer). */
+.sources-dialog-sep {
+  height: 1px;
+  background: var(--divider);
+  margin: 2px 0;
+}
+
+.sources-row {
+  gap: 10px;
+}
+
+/* Source name — click enters inline rename mode. */
+.sources-name {
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  padding: 4px 6px;
+  margin: -4px -6px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sources-name:hover {
+  background: var(--bg);
+  color: var(--accent);
+}
+.sources-name-text {
+  font-weight: 600;
+}
+
+.sources-row-side {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.sources-row-meta {
+  font-size: 0.8rem;
+}
+
+/* Row-level × remove button. */
+.sources-remove {
+  font: inherit;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-faint);
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.sources-remove:hover {
+  background: var(--above-soft);
+  color: var(--above);
+}
+
+/* Inline rename editor within a row. */
+.sources-row-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sources-name-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Inline remove confirm within a row. */
+.sources-remove-text {
+  font-weight: 600;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sources-row .sources-confirm-cancel,
+.sources-row .danger {
+  border-radius: 999px;
+  min-height: 34px;
+  padding: 6px 14px;
+}
+.sources-row .sources-confirm-cancel {
+  border: none;
+  background: var(--surface-2);
+  color: var(--text);
+  box-shadow: var(--pill-shadow);
+}
+
+/* Add-source form: Name + Type + button on one row (stacks on a narrow dialog
+   via the shared .settings-inline-form media rule). */
+.sources-add-form {
+  border-top: none;
+  padding-top: 0;
+}
+.sources-add-form .primary {
+  align-self: stretch;
+  min-height: 46px;
+  border-radius: 999px;
+  padding: 12px 20px;
+  white-space: nowrap;
+}
+@media (min-width: 600px) {
+  .sources-add-form .primary {
+    align-self: flex-end;
+  }
+}
+
+/* Rounded focus ring on the name field — on the element itself, matching its
+   own border-radius (no nested wrapper carrying a squared shadow). */
+.sources-name-field:focus-visible,
+.sources-name-input:focus-visible {
+  box-shadow: 0 0 0 3px rgba(31, 110, 125, 0.35);
+  outline: none;
+}
+
+/* Footer: Close aligned right. */
+.sources-footer {
+  justify-content: flex-end;
+}
+
+/* ---- Backup actions ------------------------------------------------------ */
+
+.settings-backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 6px 18px 0;
+}
+.settings-backup-actions button {
+  min-height: 46px;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 600;
+}
+.settings-ghost {
+  border: none;
+  background: var(--surface-2);
+  color: var(--text);
+  box-shadow: var(--pill-shadow);
+}
+.settings-ghost:hover {
+  background: var(--surface-2);
+  color: var(--accent);
+}
+.settings-note {
+  margin: 0;
+  padding: 0 18px 16px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.settings-backup-pw:not(:empty) {
+  padding: 0 18px;
+}
+
+/* ---- Danger card + footer ------------------------------------------------ */
+
+.settings-danger-card {
+  background: var(--above-soft);
+}
+.settings-danger-card .settings-group-title {
+  color: var(--above);
+}
+.settings-danger-card .settings-group-body {
+  padding: 6px 18px 16px;
+}
+
+.settings-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 6px 8px;
+}
+.settings-footer p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+.settings-site a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+.settings-site a:hover { text-decoration: underline; }

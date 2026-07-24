@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!--
+      script-src stays strict ('self', no inline, no eval) — that is the XSS-relevant
+      protection. style-src allows 'unsafe-inline' because the UI positions elements
+      (chart tooltip, show/hide) via element.style; inline styles cannot execute code,
+      and all user data is rendered via textContent, never innerHTML.
+    -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta name="app-version" content="__APP_VERSION__">
+    <meta name="theme-color" content="#2f6f7a">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <title>Vitametr</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="app"></div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

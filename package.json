@@ -1,0 +1,35 @@
+{
+  "name": "vitametr",
+  "version": "1.0.0",
+  "description": "Offline-first PWA for tracking personal health measurements over time",
+  "author": "Milan Víšek",
+  "license": "MPL-2.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "node scripts/bundle.js",
+    "build:dev": "node scripts/bundle.js --dev",
+    "watch": "esbuild src/main.ts --bundle --sourcemap --format=esm --target=es2022 --external:*.woff2 --outfile=dist/main.js --watch",
+    "dev": "node scripts/bundle.js --dev && esbuild src/main.ts --bundle --sourcemap --format=esm --target=es2022 --external:*.woff2 --outfile=dist/main.js --servedir=dist --serve=127.0.0.1:8080",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build && playwright test"
+  },
+  "keywords": [
+    "health",
+    "measurements",
+    "pwa",
+    "offline-first"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^25.0.10",
+    "esbuild": "^0.27.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^6.1.200"
+  }
+}

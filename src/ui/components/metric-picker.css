@@ -1,0 +1,37 @@
+/* Shared metric-picker combobox (used by entry + import-review). */
+
+.metric-picker { position: relative; }
+
+.metric-suggestions {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px;
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-height: 240px;
+  overflow-y: auto;
+}
+.metric-suggestions:empty { display: none; }
+.metric-suggestions li { margin: 0; }
+.metric-suggestions button {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  padding: 0.6em 0.7em;
+}
+.metric-suggestions button:hover,
+.metric-suggestions button:focus { background: var(--surface-2); }
+.metric-suggestions .sugg-new { color: var(--accent); font-weight: 600; }
+.metric-suggestion-unit { font-size: 0.85em; flex: 0 0 auto; }

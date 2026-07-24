@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SYNTHETIC Apple Health export subset (fictional data) modelling a REAL export:
+     a small number of the vitals/home types Vitametr maps, buried among the many
+     high-volume fitness/activity types a real export is dominated by (steps,
+     distance, energy, …) which must be cleanly SKIPPED (Vitametr tracks measured
+     health values, not activity). Also exercises Apple's edge cases: the molar
+     unit entity-encoded as `mmol&lt;L&gt;`, OxygenSaturation as a 0..1 fraction,
+     and mixed timezone offsets. Real exports arrive as a ZIP containing
+     apple_health_export/export.xml. -->
+<HealthData locale="cs_CZ">
+  <ExportDate value="2026-07-24 05:00:00 +0200"/>
+  <Me HKCharacteristicTypeIdentifierBiologicalSex="HKBiologicalSexNotSet"/>
+
+  <!-- Mapped: body weight (kg), two dates across a DST boundary. -->
+  <Record type="HKQuantityTypeIdentifierBodyMass" sourceName="Withings" unit="kg" value="83.1" startDate="2025-01-05 07:30:00 +0100" endDate="2025-01-05 07:30:00 +0100"/>
+  <Record type="HKQuantityTypeIdentifierBodyMass" sourceName="Withings" unit="kg" value="81.4" startDate="2025-06-18 07:12:00 +0200" endDate="2025-06-18 07:12:00 +0200"/>
+
+  <!-- Mapped: blood pressure + heart rate at one sitting. -->
+  <Record type="HKQuantityTypeIdentifierBloodPressureSystolic" sourceName="Omron" unit="mmHg" value="126" startDate="2025-06-18 07:15:00 +0200" endDate="2025-06-18 07:15:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierBloodPressureDiastolic" sourceName="Omron" unit="mmHg" value="79" startDate="2025-06-18 07:15:00 +0200" endDate="2025-06-18 07:15:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierHeartRate" sourceName="Apple Watch" unit="count/min" value="64" startDate="2025-06-18 07:15:30 +0200" endDate="2025-06-18 07:15:30 +0200"/>
+
+  <!-- Mapped: glucose with Apple's entity-encoded molar unit `mmol<L>`. -->
+  <Record type="HKQuantityTypeIdentifierBloodGlucose" sourceName="Contour" unit="mmol&lt;L&gt;" value="5.2" startDate="2025-06-18 06:50:00 +0200" endDate="2025-06-18 06:50:00 +0200"/>
+
+  <!-- Mapped: SpO2 as a 0..1 fraction (0.97 -> 97%). -->
+  <Record type="HKQuantityTypeIdentifierOxygenSaturation" sourceName="Apple Watch" unit="%" value="0.97" startDate="2025-06-18 07:16:00 +0200" endDate="2025-06-18 07:16:00 +0200"/>
+
+  <!-- Mapped: body temperature (°C) + waist circumference (cm). -->
+  <Record type="HKQuantityTypeIdentifierBodyTemperature" sourceName="Thermometer" unit="degC" value="36.7" startDate="2025-06-18 07:20:00 +0200" endDate="2025-06-18 07:20:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierWaistCircumference" sourceName="Tape" unit="cm" value="88" startDate="2025-06-18 07:25:00 +0200" endDate="2025-06-18 07:25:00 +0200"/>
+
+  <!-- NOT mapped: the high-volume activity/fitness types that dominate a real
+       export. These must produce NO proposals (Vitametr is not a fitness app). -->
+  <Record type="HKQuantityTypeIdentifierStepCount" sourceName="iPhone" unit="count" value="8421" startDate="2025-06-17 00:00:00 +0200" endDate="2025-06-17 23:59:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierDistanceWalkingRunning" sourceName="iPhone" unit="km" value="6.13" startDate="2025-06-17 00:00:00 +0200" endDate="2025-06-17 23:59:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierActiveEnergyBurned" sourceName="Apple Watch" unit="kcal" value="512" startDate="2025-06-17 00:00:00 +0200" endDate="2025-06-17 23:59:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierBasalEnergyBurned" sourceName="Apple Watch" unit="kcal" value="1680" startDate="2025-06-17 00:00:00 +0200" endDate="2025-06-17 23:59:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierFlightsClimbed" sourceName="iPhone" unit="count" value="12" startDate="2025-06-17 00:00:00 +0200" endDate="2025-06-17 23:59:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierWalkingSpeed" sourceName="iPhone" unit="km/hr" value="4.9" startDate="2025-06-17 08:00:00 +0200" endDate="2025-06-17 08:00:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierBodyMassIndex" sourceName="Withings" unit="count" value="25.4" startDate="2025-06-18 07:12:00 +0200" endDate="2025-06-18 07:12:00 +0200"/>
+  <Record type="HKQuantityTypeIdentifierHeight" sourceName="Manual" unit="cm" value="181" startDate="2020-01-01 12:00:00 +0100" endDate="2020-01-01 12:00:00 +0100"/>
+  <Record type="HKQuantityTypeIdentifierHeadphoneAudioExposure" sourceName="Apple Watch" unit="dBASPL" value="72" startDate="2025-06-17 19:00:00 +0200" endDate="2025-06-17 19:30:00 +0200"/>
+  <Record type="HKCategoryTypeIdentifierSleepAnalysis" sourceName="Apple Watch" value="HKCategoryValueSleepAnalysisAsleepCore" startDate="2025-06-17 23:30:00 +0200" endDate="2025-06-18 06:40:00 +0200"/>
+</HealthData>
