@@ -1,0 +1,133 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit tests
+        run: npx vitest run
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tests
+        run: npx playwright test
+
+      - name: Pack dist for releases
+        run: cd dist && zip -r ../vitametr-dist.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitametr-build
+          path: |
+            dist/
+            vitametr-dist.zip
+
+  deploy-pwa:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vitametr-build
+
+      - name: Push to GitLab
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+          git config --global user.email "deploy@vitametr.com"
+          git config --global user.name "Deploy Bot"
+          git clone https://oauth2:${GITLAB_TOKEN}@gitlab.com/acidek/vitametr-com.git deploy-repo
+          # The web repo is pushed to GitLab only after its landing page is
+          # ready; until then there is nothing to deploy into.
+          if [ ! -f deploy-repo/index.html ]; then
+            echo "vitametr-com is not initialized on GitLab yet — skipping deploy."
+            exit 0
+          fi
+          rsync -a --delete --exclude=.git dist/ deploy-repo/run/
+          cd deploy-repo
+          # Browsers only offer a PWA update when sw.js bytes change. The cache
+          # name only carries the app version, so a same-version deploy would
+          # otherwise never reach installed apps — stamp the build into the
+          # worker to force the update check to see a new worker.
+          HASH=$(find run -type f ! -name sw.js -exec sha256sum {} + | sort | sha256sum | cut -c1-12)
+          sed -i '/^\/\/ build /d' run/sw.js
+          echo "// build ${HASH}" >> run/sw.js
+          git add run
+          git diff --staged --quiet || git commit -m "Update PWA from GitHub build"
+          git push origin main
+
+  release-latest:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vitametr-build
+
+      - name: Update latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest Build
+          body: |
+            Automatic build from latest commit on main branch.
+
+            **Download:** [vitametr-dist.zip](https://github.com/ACiDekCZ/vitametr/releases/download/latest/vitametr-dist.zip) — unzip and serve the folder with any static file server.
+
+            Or use the [online version](https://vitametr.com/run/). For stable releases, see [tagged versions](https://github.com/ACiDekCZ/vitametr/releases).
+          prerelease: true
+          files: vitametr-dist.zip
+          make_latest: false
+
+  release-tagged:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vitametr-build
+
+      - name: Create tagged release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body: |
+            ## Vitametr ${{ github.ref_name }}
+
+            **Download:** [vitametr-dist.zip](https://github.com/ACiDekCZ/vitametr/releases/download/${{ github.ref_name }}/vitametr-dist.zip) — unzip and serve the folder with any static file server.
+
+            Or use the [online version](https://vitametr.com/run/).
+          files: vitametr-dist.zip
+          make_latest: true
