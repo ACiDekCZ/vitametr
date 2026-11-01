@@ -25,6 +25,7 @@ import { formatDateTime, plural } from '../../i18n/index';
 import { switchControl } from '../components/switch';
 import { tagChip } from '../components/tag-chip';
 import { watchStar } from '../components/watch-star';
+import { plusIcon } from '../components/plus-icon';
 import { metricName, renderCatalogTools } from './catalog-actions';
 import { runPackImport } from './import-actions';
 import { aliasChips, codeRows, tagChips } from './metric-editors';
@@ -215,7 +216,8 @@ export const metricsManageView: View = {
     const heading = el('div', 'metrics-heading');
     heading.append(textEl('h1', t('metrics.title')));
     heading.append(textEl('p', t('metrics.subtitle'), 'metrics-subtitle muted'));
-    const addBtn = button('+', 'metrics-add primary');
+    const addBtn = button('', 'metrics-add primary');
+    addBtn.append(plusIcon());
     addBtn.setAttribute('aria-label', t('metrics.addMetric'));
     addBtn.addEventListener('click', () => openAddMetricDialog());
     header.append(heading, addBtn);

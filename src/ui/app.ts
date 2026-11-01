@@ -40,6 +40,7 @@ import {
   setDeviceLocale,
 } from './device-prefs';
 import { openFabMenu } from './components/fab-menu';
+import { plusIcon } from './components/plus-icon';
 import { profileSwitcher } from './components/profile-switcher';
 import { getLastDataRoute, rememberDataRoute } from './data-nav';
 
@@ -505,9 +506,8 @@ function mountShell(
           b.setAttribute('aria-haspopup', 'menu');
           b.setAttribute('aria-expanded', 'false');
         }
-        const icon = el('span', 'nav-fab-icon');
-        icon.textContent = '+';
-        icon.setAttribute('aria-hidden', 'true');
+        const icon = plusIcon();
+        icon.classList.add('nav-fab-icon');
         const text = el('span', 'nav-label');
         text.textContent = label;
         b.append(icon, text);

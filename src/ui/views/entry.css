@@ -13,7 +13,7 @@
 /* Inputs: soft-filled inside the white card, focus lifts to a white field. */
 .entry-form input,
 .entry-form select {
-  background: var(--bg);
+  background-color: var(--bg);
   border: 1.5px solid transparent;
   border-radius: var(--radius-input);
   padding: 11px 12px;
@@ -23,7 +23,7 @@
 .entry-form input:focus,
 .entry-form select:focus {
   border-color: var(--accent);
-  background: var(--surface);
+  background-color: var(--surface);
   outline: none;
 }
 .entry-form label {
