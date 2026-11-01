@@ -187,7 +187,9 @@ export const overviewView: View = {
         }
         paint();
       });
-      actions.append(asOfBtn, asOfDate);
+      const asOfControl = el('div', 'overview-asof-control');
+      asOfControl.append(asOfBtn, asOfDate);
+      actions.append(asOfControl);
 
       // The summary/print button is filter-aware: with no filter it opens the
       // full report straight away; under an active filter it gains a count + an
@@ -212,7 +214,7 @@ export const overviewView: View = {
 
       const summaryBtn = document.createElement('button');
       summaryBtn.type = 'button';
-      summaryBtn.className = 'overview-summary-btn';
+      summaryBtn.className = 'overview-ghost overview-summary-btn';
       const refreshSummary = (): void => {
         if (!anyFilter()) {
           summaryBtn.textContent = ctx.t('report.open');

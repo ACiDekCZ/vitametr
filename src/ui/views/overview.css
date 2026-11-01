@@ -14,11 +14,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--gap);
+  gap: 8px var(--gap);
   flex-wrap: wrap;
 }
 .overview-header h1 {
-  margin: 0 0 0.2em;
+  margin: 0;
   font-size: 1.75rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -215,6 +215,9 @@
   padding: 2rem 1rem;
   margin: 0 0 var(--gap);
 }
+.overview-header + .overview-prompt {
+  margin-top: 8px;
+}
 .overview-prompt-text {
   margin: 0 0 var(--gap);
   color: var(--text-muted);
@@ -248,10 +251,12 @@
 /* ---- Header actions: Summary button + grid/list layout toggle ------------ */
 
 .overview-header-actions {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   gap: 8px;
   flex: none;
+  max-width: 100%;
 }
 .overview-layout-toggle .seg-btn {
   padding: 6px 11px;
@@ -301,7 +306,6 @@
 /* Summary / print button: gains an accent-soft highlight while the overview is
    filtered (a signal it will carry the filter to the report). */
 .overview-summary-btn {
-  white-space: nowrap;
   transition: background 0.15s;
 }
 .overview-summary-btn.is-filter {
@@ -368,19 +372,34 @@
 }
 
 /* As-of (time-travel) ghost button + revealed pill date input. */
+.overview-asof-control {
+  position: relative;
+  display: grid;
+  min-width: 0;
+}
 .overview-asof-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   font-size: 0.9rem;
-  white-space: nowrap;
 }
-.overview-asof-btn[hidden],
+.overview-asof-btn[hidden] {
+  /* Keep the label's footprint when the date input replaces it. */
+  display: inline-flex;
+  visibility: hidden;
+}
 .overview-asof-date[hidden] {
   display: none;
 }
 .overview-asof-date {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
   font: inherit;
+  font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid var(--border);
   background: var(--surface);
@@ -404,7 +423,7 @@
   background: var(--accent-soft);
   border-radius: 16px;
   padding: 12px 16px;
-  margin: 0 0 var(--gap);
+  margin: 8px 0 var(--gap);
 }
 .overview-asof-banner-text {
   font-weight: 700;
