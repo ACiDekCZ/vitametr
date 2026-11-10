@@ -133,8 +133,26 @@ for (const viewport of [
       const summary = actions.getByRole('button', { name: 'Summary / print', exact: true });
       const before = await summary.boundingBox();
       expect(before).not.toBeNull();
+      const dateInput = page.locator('.overview-asof-date');
+      // Measure the browser's full native date control, including its calendar icon.
+      const naturalDateWidth = await dateInput.evaluate((input) => {
+        const probe = input.cloneNode(true) as HTMLInputElement;
+        probe.removeAttribute('hidden');
+        probe.style.cssText = 'position: fixed; width: max-content; visibility: hidden;';
+        document.body.append(probe);
+        const width = probe.getBoundingClientRect().width;
+        probe.remove();
+        return width;
+      });
+      const controlBefore = await actions.locator('.overview-asof-control').boundingBox();
+      expect(controlBefore).not.toBeNull();
+      expect(controlBefore!.width).toBeGreaterThanOrEqual(naturalDateWidth - 0.5);
       await actions.getByRole('button', { name: 'As of date', exact: true }).click();
       await expect(page.getByLabel('As-of date', { exact: true })).toBeVisible();
+      const dateBox = await dateInput.boundingBox();
+      expect(dateBox).not.toBeNull();
+      expect(dateBox!.width).toBeGreaterThanOrEqual(naturalDateWidth - 0.5);
+      expect(dateBox!.width).toBeCloseTo(controlBefore!.width, 0);
       await expect(summary).toBeVisible();
       const after = await summary.boundingBox();
       expect(after).not.toBeNull();
