@@ -14,11 +14,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--gap);
+  gap: 8px var(--gap);
   flex-wrap: wrap;
 }
 .overview-header h1 {
-  margin: 0 0 0.2em;
+  margin: 0;
   font-size: 1.75rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -27,6 +27,9 @@
 
 /* Summary chips: soft pills with a small state dot — and the quickest filter
    in the app (tap "5 above range" to see just those five). */
+.overview-header + .overview-chip-host {
+  margin-top: 8px;
+}
 .overview-chips {
   display: flex;
   flex-wrap: wrap;
@@ -215,6 +218,9 @@
   padding: 2rem 1rem;
   margin: 0 0 var(--gap);
 }
+.overview-header + .overview-prompt {
+  margin-top: 8px;
+}
 .overview-prompt-text {
   margin: 0 0 var(--gap);
   color: var(--text-muted);
@@ -249,9 +255,26 @@
 
 .overview-header-actions {
   display: flex;
+  flex-wrap: wrap;
+  white-space: nowrap;
+  align-items: stretch;
+  gap: 8px;
+  flex: none;
+  max-width: 100%;
+}
+/* Keep the view controls together while the date and summary wrap independently. */
+.overview-view-controls {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   flex: none;
+  max-width: 100%;
+}
+.overview-asof-control,
+.overview-summary-btn {
+  flex: 0 0 auto;
+  max-width: 100%;
 }
 .overview-layout-toggle .seg-btn {
   padding: 6px 11px;
@@ -272,6 +295,7 @@
    dropped on the phone, where the toolbar has no room for it. */
 .overview-spark-control {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 6px;
   min-width: 0;
@@ -301,7 +325,6 @@
 /* Summary / print button: gains an accent-soft highlight while the overview is
    filtered (a signal it will carry the filter to the report). */
 .overview-summary-btn {
-  white-space: nowrap;
   transition: background 0.15s;
 }
 .overview-summary-btn.is-filter {
@@ -368,25 +391,41 @@
 }
 
 /* As-of (time-travel) ghost button + revealed pill date input. */
+.overview-asof-control {
+  display: grid;
+  min-width: 0;
+}
+.overview-asof-btn,
+.overview-asof-date {
+  grid-area: 1 / 1;
+}
 .overview-asof-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   font-size: 0.9rem;
-  white-space: nowrap;
 }
-.overview-asof-btn[hidden],
+.overview-asof-btn[hidden] {
+  /* Override [hidden] so both controls size the grid cell even when invisible. */
+  display: inline-flex;
+  visibility: hidden;
+}
 .overview-asof-date[hidden] {
-  display: none;
+  display: block;
+  visibility: hidden;
 }
 .overview-asof-date {
+  width: auto;
+  min-width: 0;
   font: inherit;
+  font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
   border-radius: 999px;
-  padding: 8px 14px;
+  padding: 8px 8px 8px 14px;
   min-height: 40px;
 }
 .overview-asof-date:hover {
@@ -404,7 +443,7 @@
   background: var(--accent-soft);
   border-radius: 16px;
   padding: 12px 16px;
-  margin: 0 0 var(--gap);
+  margin: 8px 0 var(--gap);
 }
 .overview-asof-banner-text {
   font-weight: 700;
