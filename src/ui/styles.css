@@ -450,6 +450,15 @@ a { color: var(--accent); }
   padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
+/* Prevent background scrolling while a modal dialog is open. */
+dialog:modal {
+  overscroll-behavior: contain;
+}
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
 /* Modal dialog (native <dialog> in the top layer — survives view re-renders).
    Used for the import password prompt. Theme-aware via the shared variables. */
 dialog.modal {
