@@ -65,6 +65,86 @@ async function pickAsOf(page: Page, date: string): Promise<void> {
   await page.getByLabel('As-of date').fill(date);
 }
 
+for (const viewport of [
+  { width: 320, height: 844 },
+  { width: 390, height: 844 },
+  { width: 499, height: 900 },
+  { width: 500, height: 900 },
+  { width: 700, height: 900 },
+  { width: 1280, height: 800 },
+]) {
+  for (const layout of ['empty', 'grid', 'list'] as const) {
+    test(`header controls fit and stay put when opening the date picker (${viewport.width}px, ${layout})`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.getByRole('button', { name: /Create profile/ }).click();
+      await expect(page.locator('.app-nav')).toBeVisible();
+      if (layout !== 'empty') {
+        await addValueOn(page, 'Glucose', '90', '2025-01-01');
+        await page.locator('.app-nav').getByRole('button', { name: 'Overview' }).click();
+        if (layout === 'list') {
+          await page.getByRole('button', { name: 'List view', exact: true }).click();
+        }
+      }
+      await page.evaluate(() => document.fonts.ready.then(() => {}));
+
+      const actions = page.locator('.overview-header-actions');
+      const controls = actions.locator(':scope > *:visible');
+      await expect(controls).toHaveCount(layout === 'empty' ? 2 : 3);
+      const boxes = await controls.evaluateAll((elements) =>
+        elements.map((element) => {
+          const { x, y, width, height } = element.getBoundingClientRect();
+          return { x, y, width, height };
+        }),
+      );
+      for (const box of boxes) {
+        expect(box.x).toBeGreaterThanOrEqual(0);
+        expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
+        expect(box.width).toBeGreaterThan(0);
+      }
+      if (viewport.width >= 1280 || (layout !== 'list' && (viewport.width === 499 || viewport.width >= 700))) {
+        // At 500px the sidebar appears, reducing the space available to the header.
+        for (const box of boxes) {
+          expect(box.y).toBeCloseTo(boxes[0].y, 0);
+        }
+      }
+      if (viewport.width === 700 && layout === 'list') {
+        // The date fits beside the view controls; Summary can wrap independently.
+        expect(boxes[1].y).toBeCloseTo(boxes[0].y, 0);
+        expect(boxes[2].y).toBeGreaterThanOrEqual(boxes[0].y + boxes[0].height);
+      }
+
+      if (layout !== 'empty') {
+        const toggle = page.locator('.overview-layout-toggle');
+        const trailingSpace = await toggle.evaluate((element) => {
+          const lastButton = element.lastElementChild!;
+          return element.getBoundingClientRect().right - lastButton.getBoundingClientRect().right
+            - parseFloat(getComputedStyle(element).paddingRight);
+        });
+        expect(trailingSpace).toBeCloseTo(0, 0);
+      }
+      // Check individual buttons too: a segmented control must not hide overflow.
+      for (const button of await actions.getByRole('button').all()) {
+        const box = await button.boundingBox();
+        expect(box).not.toBeNull();
+        expect(box!.x).toBeGreaterThanOrEqual(0);
+        expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width);
+      }
+
+      const summary = actions.getByRole('button', { name: 'Summary / print', exact: true });
+      const before = await summary.boundingBox();
+      expect(before).not.toBeNull();
+      await actions.getByRole('button', { name: 'As of date', exact: true }).click();
+      await expect(page.getByLabel('As-of date', { exact: true })).toBeVisible();
+      await expect(summary).toBeVisible();
+      const after = await summary.boundingBox();
+      expect(after).not.toBeNull();
+      for (const key of ['x', 'y', 'width', 'height'] as const) {
+        expect(after![key]).toBeCloseTo(before![key], 0);
+      }
+    });
+  }
+}
+
 test('an earlier as-of date shows the state then, with empty placeholders', async ({ page }) => {
   const errors = trackErrors(page);
   await seed(page);

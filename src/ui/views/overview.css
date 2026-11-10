@@ -27,6 +27,9 @@
 
 /* Summary chips: soft pills with a small state dot — and the quickest filter
    in the app (tap "5 above range" to see just those five). */
+.overview-header + .overview-chip-host {
+  margin-top: 8px;
+}
 .overview-chips {
   display: flex;
   flex-wrap: wrap;
@@ -251,11 +254,26 @@
 /* ---- Header actions: Summary button + grid/list layout toggle ------------ */
 
 .overview-header-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  white-space: nowrap;
   align-items: stretch;
   gap: 8px;
   flex: none;
+  max-width: 100%;
+}
+/* Keep the view controls together while the date and summary wrap independently. */
+.overview-view-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  max-width: 100%;
+}
+.overview-asof-control,
+.overview-summary-btn {
+  flex: 0 0 auto;
   max-width: 100%;
 }
 .overview-layout-toggle .seg-btn {
@@ -277,6 +295,7 @@
    dropped on the phone, where the toolbar has no room for it. */
 .overview-spark-control {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 6px;
   min-width: 0;
@@ -386,6 +405,7 @@
 }
 .overview-asof-btn[hidden] {
   /* Keep the label's footprint when the date input replaces it. */
+  /* Override [hidden]'s display: none so the invisible label still reserves space. */
   display: inline-flex;
   visibility: hidden;
 }

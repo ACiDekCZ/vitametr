@@ -452,8 +452,9 @@ export const overviewView: View = {
       }
 
       updateToggle();
-      actions.prepend(toggle);
-      toggle.after(sparkWrap);
+      const viewControls = el('div', 'overview-view-controls');
+      viewControls.append(toggle, sparkWrap);
+      actions.prepend(viewControls);
       updateSparkToggle();
 
       // Filter row: a pill search plus (when tags are on) the tag chips.
